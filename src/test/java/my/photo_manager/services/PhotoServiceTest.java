@@ -26,33 +26,26 @@ class PhotoServiceTest {
     @Mock
     private PhotoRepository repository;
 
-    private  PhotoService photoService;
+    private PhotoService photoService;
 
     @BeforeEach
-    void init(){
-        photoService = new PhotoService(configuration, repository);
+    void init() {
+        photoService = new PhotoService(repository);
     }
 
     @Test
     void canGetHashValueOfPhotoFileHashValue() throws IOException {
-        var testPhotoFile = Paths.get("src", "test", "resources", "TestPhotos","Photo1.jpg").toFile();
+        var testPhotoFile = Paths.get("src", "test", "resources", "TestPhotos", "Photo1.jpg").toFile();
         var hashValue = photoService.getHashValue(testPhotoFile);
 
         assertThat(hashValue).isNotNull();
         assertThat(hashValue).isNotEmpty();
     }
 
-    @Test
-    void canGetAllPhotosOfSourceFolder(){
-        var testPhotos = photoService.getAllPhotoFilesInSourceFolder(Paths.get("src", "test", "resources", "TestPhotos"));
-
-        assertThat(testPhotos).isNotNull();
-        assertThat(testPhotos).isNotEmpty();
-    }
 
     @Test
-    void canBuildPhotoObject(){
-        var testPhotoFile = Paths.get("src", "test", "resources", "TestPhotos","Photo1.jpg").toFile();
+    void canBuildPhotoObject() {
+        var testPhotoFile = Paths.get("src", "test", "resources", "TestPhotos", "Photo1.jpg").toFile();
         var photoObject = photoService.buildPhotoObject(testPhotoFile);
 
         assertThat(photoObject).isNotNull();
@@ -64,14 +57,14 @@ class PhotoServiceTest {
     }
 
     @Test
-    void canSavePhotoObject(){
+    void canSavePhotoObject() {
         photoService.savePhotoObject(mock(Photo.class));
 
         verify(repository).saveAndFlush(any(Photo.class));
     }
 
     @Test
-    void canGetAllPhotoObjects(){
+    void canGetAllPhotoObjects() {
         photoService.getAll();
 
         verify(repository).findAll();
