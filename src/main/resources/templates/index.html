@@ -21,8 +21,8 @@
 
     <div class="row">
 
-        <div class="col-lg-3 col-md-4 col-6" th:each="albumItem:${photos}">
-            <img class="img-fluid img-thumbnail" th:src="@{'data:image/jpeg;base64,'+${albumItem.rawData}}" alt="">
+        <div class="col-lg-3 col-md-4 col-6" th:each="photo:${photos}">
+            <img class="img-fluid img-thumbnail" th:src="@{'data:image/jpeg;base64,'+${photo.rawData}}" alt="">
         </div>
 
     </div>
