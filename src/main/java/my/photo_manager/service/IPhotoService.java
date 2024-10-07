@@ -39,4 +39,9 @@ public interface IPhotoService<T extends Photo> {
      * @return the saved photo object
      */
     T savePhotoObject(@NonNull Photo photoObject);
+
+    /**
+     * @return a collection of all photos
+     */
+    Collection<T> getAll();
 }

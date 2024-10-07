@@ -70,4 +70,11 @@ class PhotoServiceTest {
 
         verify(repository).saveAndFlush(any(Photo.class));
     }
+
+    @Test
+    void canGetAllPhotoObjects(){
+        photoService.getAll();
+
+        verify(repository).findAll();
+    }
 }

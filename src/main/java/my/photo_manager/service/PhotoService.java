@@ -52,4 +52,9 @@ public class PhotoService implements IPhotoService<Photo> {
         return repository.saveAndFlush(photoObject);
     }
 
+    @Override
+    public Collection<Photo> getAll() {
+        return repository.findAll();
+    }
+
 }
