@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
+import java.util.Optional;
 
 import static net.logstash.logback.argument.StructuredArguments.kv;
 
@@ -31,16 +32,25 @@ public class PhotoService implements IPhotoService<Photo> {
                 .withHashValue(getHashValue(photoFile))
                 .withFilePath(photoFile.getAbsolutePath())
                 .build();
-        log.info("build {} from {}", kv("photoObject", photoObject), kv("photoFile", photoFile.getAbsolutePath()));
+        log.info("build {}", kv("photoObject", photoObject));
 
         return photoObject;
     }
 
     @Override
     public Photo savePhotoObject(@NonNull Photo photoObject) {
+        Photo savedPhoto = null;
+        Optional<Photo> optionalPhoto = repository.findByHashValue(photoObject.getHashValue());
 
-        // TODO check if photo object exists already
-        return repository.saveAndFlush(photoObject);
+        if (optionalPhoto.isEmpty()) {
+            savedPhoto = repository.saveAndFlush(photoObject);
+            log.info("save {}", kv("photoObject", savedPhoto));
+        } else {
+            savedPhoto = optionalPhoto.get();
+            log.info("{} exists already", kv("photoObject", savedPhoto));
+        }
+
+        return savedPhoto;
     }
 
     @Override
