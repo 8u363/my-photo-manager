@@ -1,4 +1,4 @@
-package my.photo_manager.configuration;
+package my.photo_manager.config;
 
 import org.springframework.context.annotation.Configuration;
 

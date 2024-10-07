@@ -1,8 +1,8 @@
-package my.photo_manager.service;
+package my.photo_manager.services;
 
-import my.photo_manager.configuration.PhotoConfiguration;
-import my.photo_manager.photo.Photo;
-import my.photo_manager.repository.PhotoRepository;
+import my.photo_manager.config.PhotoConfiguration;
+import my.photo_manager.model.photo.Photo;
+import my.photo_manager.model.repository.PhotoRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -13,7 +13,6 @@ import java.io.IOException;
 import java.nio.file.Paths;
 
 import static org.assertj.core.api.Assertions.assertThat;
-
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;

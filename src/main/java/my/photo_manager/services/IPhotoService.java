@@ -1,7 +1,7 @@
-package my.photo_manager.service;
+package my.photo_manager.services;
 
 import lombok.NonNull;
-import my.photo_manager.photo.Photo;
+import my.photo_manager.model.photo.Photo;
 import org.springframework.util.DigestUtils;
 
 import java.io.File;

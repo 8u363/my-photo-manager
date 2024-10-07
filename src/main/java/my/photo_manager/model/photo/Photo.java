@@ -1,4 +1,4 @@
-package my.photo_manager.photo;
+package my.photo_manager.model.photo;
 
 import jakarta.persistence.*;
 import lombok.*;
