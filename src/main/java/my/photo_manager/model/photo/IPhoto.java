@@ -9,9 +9,4 @@ public interface IPhoto {
     String getHashValue();
 
     String getFilePath();
-
-    int getHeight();
-
-    int getWidth();
-
 }

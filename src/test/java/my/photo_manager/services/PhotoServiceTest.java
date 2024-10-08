@@ -2,7 +2,7 @@ package my.photo_manager.services;
 
 import my.photo_manager.config.PhotoConfiguration;
 import my.photo_manager.model.photo.Photo;
-import my.photo_manager.model.repository.PhotoRepository;
+import my.photo_manager.repository.PhotoRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -26,11 +26,14 @@ class PhotoServiceTest {
     @Mock
     private PhotoRepository repository;
 
+    @Mock
+    private PhotoMetaDataService metaDataService;
+
     private PhotoService photoService;
 
     @BeforeEach
     void init() {
-        photoService = new PhotoService(repository);
+        photoService = new PhotoService(repository, metaDataService);
     }
 
     @Test

@@ -1,4 +1,4 @@
-package my.photo_manager.model.repository;
+package my.photo_manager.repository;
 
 import my.photo_manager.model.photo.Photo;
 import org.springframework.data.jpa.repository.JpaRepository;

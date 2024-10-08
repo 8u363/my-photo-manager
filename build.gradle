@@ -35,9 +35,11 @@ dependencies {
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 
 	implementation("net.logstash.logback:logstash-logback-encoder:7.4")
+	implementation("org.apache.commons:commons-imaging:1.0-alpha3")
 
 	implementation("commons-io:commons-io:2.15.1")
 	implementation("com.google.guava:guava:31.1-jre")
+	implementation("org.json:json:20231013")
 }
 
 tasks.named('test') {

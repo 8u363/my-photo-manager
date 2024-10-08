@@ -1,4 +1,6 @@
 package my.photo_manager.web;
 
-public record PhotoDTO (long ID, String rawData){
+import lombok.NonNull;
+
+public record PhotoDTO (long ID, @NonNull String rawData){
 }
