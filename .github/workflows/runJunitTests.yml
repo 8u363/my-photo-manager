@@ -21,3 +21,6 @@ jobs:
 
       - name: Run JUnit tests
         run: ./gradlew test
+
+      - name: Run Pi Tests
+        run: ./gradlew pitest
