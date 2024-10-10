@@ -21,7 +21,7 @@ public class PhotoImporter {
     private final PhotoService photoService;
     private final PhotoConfiguration configuration;
 
-    public PhotoImporter(@NonNull PhotoService photoService, @NonNull PhotoConfiguration configuration) {
+    protected PhotoImporter(@NonNull PhotoService photoService, @NonNull PhotoConfiguration configuration) {
         this.photoService = photoService;
         this.configuration = configuration;
     }

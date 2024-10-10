@@ -63,7 +63,7 @@ public class PhotoService {
     }
 
     protected Photo savePhotoObject(@NonNull Photo photoObject) {
-        Photo savedPhoto = null;
+        Photo savedPhoto;
         Optional<Photo> optionalPhoto = repository.findByHashValue(photoObject.getHashValue());
 
         if (optionalPhoto.isEmpty()) {

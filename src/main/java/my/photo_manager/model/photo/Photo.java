@@ -20,6 +20,7 @@ public class Photo implements IPhoto {
     private long ID;
 
     @NonNull
+    @Column(unique = true)
     private String hashValue;
 
     @NonNull

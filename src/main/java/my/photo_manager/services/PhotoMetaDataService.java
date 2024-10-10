@@ -123,7 +123,7 @@ public class PhotoMetaDataService {
                     }
                 }
             }
-        } catch (IllegalArgumentException | IOException | ImageReadException e) {
+        } catch (IllegalArgumentException | IOException | ImageReadException ignored) {
         }
 
         return latitude;
