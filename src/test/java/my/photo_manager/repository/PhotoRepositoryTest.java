@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.dao.DataIntegrityViolationException;
 
+import static my.photo_manager.TestUtils.TEST_FILE_PATH;
+import static my.photo_manager.TestUtils.TEST_HASH_VALUE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -17,37 +19,32 @@ class PhotoRepositoryTest {
 
     @Test
     void shouldReturnPhotoWhenFindByHashValue() {
-        var hashValue = "TestHashValue";
-
         repository.saveAndFlush(Photo.builder()
-                .withHashValue(hashValue)
-                .withFilePath("TestFilePath")
+                .withHashValue(TEST_HASH_VALUE)
+                .withFilePath(TEST_FILE_PATH)
                 .build());
-        assertThat(repository.findByHashValue(hashValue)).isPresent();
+        assertThat(repository.findByHashValue(TEST_HASH_VALUE)).isPresent();
 
     }
 
     @Test
     void shouldNotReturnPhotoWhenFindByHashValueIsNotPresent() {
-        var hashValue = "TestHashValue";
-
-        assertThat(repository.findByHashValue(hashValue)).isNotPresent();
+        assertThat(repository.findByHashValue(TEST_HASH_VALUE)).isNotPresent();
     }
 
     @Test
     void shouldThrowExceptionWhenSaveDuplicatedPhoto() {
-        var hashValue = "TestHashValue";
         var photo1 = Photo.builder()
-                .withHashValue(hashValue)
-                .withFilePath("TestFilePath")
+                .withHashValue(TEST_HASH_VALUE)
+                .withFilePath(TEST_FILE_PATH)
                 .build();
         var photo2 = Photo.builder()
-                .withHashValue(hashValue)
+                .withHashValue(TEST_HASH_VALUE)
                 .withFilePath("TestFilePath2")
                 .build();
 
         repository.saveAndFlush(photo1);
-        assertThat(repository.findByHashValue(hashValue)).isPresent();
+        assertThat(repository.findByHashValue(TEST_HASH_VALUE)).isPresent();
 
         assertThrows(DataIntegrityViolationException.class, () -> repository.saveAndFlush(photo2));
     }
