@@ -27,7 +27,7 @@ public class PhotoController {
 
     @RequestMapping(value = "/")
     public String index(Model model) {
-        model.addAttribute("filter", filterService.getFilterList()
+        model.addAttribute("filterElements", filterService.getFilterList()
                 .stream()
                 .map(this::mapFilterToDTO)
                 .collect(Collectors.toList()));
