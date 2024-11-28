@@ -3,6 +3,6 @@ server:
 
 spring:
   application:
-    name: "My Photo Manager"
+    name: "My Photo Api"
   profiles:
     active: dev

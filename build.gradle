@@ -2,7 +2,7 @@ plugins {
     id 'java'
     id 'org.springframework.boot' version '3.3.4'
     id 'io.spring.dependency-management' version '1.1.6'
-    id 'info.solidsoft.pitest' version '1.15.0'
+    id 'jacoco'
 }
 
 group = 'my'
@@ -27,7 +27,6 @@ repositories {
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf:3.2.2'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
@@ -35,6 +34,8 @@ dependencies {
 
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
+    testCompileOnly 'org.projectlombok:lombok'
+    testAnnotationProcessor 'org.projectlombok:lombok'
 
     runtimeOnly 'com.h2database:h2'
 
@@ -45,13 +46,36 @@ dependencies {
     implementation 'org.json:json:20231013'
 }
 
-tasks.named('test') {
-    useJUnitPlatform()
+task runUnitTests(type: Test) {
+    useJUnitPlatform {
+        includeTags("UNIT-TEST")
+        excludeTags("INTEGRATION-TEST")
+    }
 }
 
-pitest {
-    junit5PluginVersion = '1.2.1'
-    outputFormats = ['HTML']
-    threads = 8
-    mutators = ['DEFAULTS']
+task runAllTest(type: Test) {
+    useJUnitPlatform {
+        includeTags("INTEGRATION-TEST", "UNIT-TEST")
+    }
+
+    finalizedBy jacocoTestReport
+}
+
+jacocoTestReport {
+    dependsOn testIntegrationTest // Tests ausführen, bevor der Report erstellt wird
+
+    reports {
+        xml.required = true
+        html.required = true
+    }
+}
+
+jacocoTestCoverageVerification {
+    violationRules {
+        rule {
+            limit {
+                minimum = 0.80
+            }
+        }
+    }
 }
