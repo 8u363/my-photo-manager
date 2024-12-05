@@ -61,7 +61,9 @@ public class PhotoService implements IPhotoService<Photo> {
     @Override
     public Page<Photo> getPhotos(int page, int size) {
         Pageable pageRequest = PageRequest.of(page, size);
-        var pageContent =  repository.findAll(pageRequest);
+        log.debug("{}", kv("pageRequest", pageRequest));
+        var pageContent = repository.findAll(pageRequest);
+        log.debug("{}",kv("pageContent", pageContent) );
         return pageContent;
     }
 
