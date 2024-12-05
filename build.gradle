@@ -62,7 +62,7 @@ task runAllTest(type: Test) {
 }
 
 jacocoTestReport {
-    dependsOn testIntegrationTest // Tests ausführen, bevor der Report erstellt wird
+    dependsOn runAllTest
 
     reports {
         xml.required = true
