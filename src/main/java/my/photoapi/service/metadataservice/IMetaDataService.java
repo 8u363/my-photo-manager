@@ -6,5 +6,5 @@ import java.nio.file.Path;
 
 public interface IMetaDataService<T extends IMetaData> {
 
-    T createMetaData(@NonNull Path photoFilePath);
+    T createMetaDataFromPhotoFile(@NonNull Path photoFilePath);
 }

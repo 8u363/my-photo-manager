@@ -8,7 +8,7 @@ import lombok.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Table(name = "label")
-@EqualsAndHashCode
+@EqualsAndHashCode(exclude = "ID")
 @ToString
 @Getter
 public class Label implements ILabel {

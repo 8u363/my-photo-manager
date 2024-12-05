@@ -11,7 +11,12 @@ public record Location(@NonNull String country,
                        @NonNull String houseNumber) implements ILocation {
 
     public static LocationBuilder builder() {
-        return new LocationBuilder().withCountry("").withCity("").withPostalCode("").withStreet("").withHouseNumber("");
+        return new LocationBuilder()
+                .withCountry("")
+                .withCity("")
+                .withPostalCode("")
+                .withStreet("")
+                .withHouseNumber("");
     }
 
     @Override

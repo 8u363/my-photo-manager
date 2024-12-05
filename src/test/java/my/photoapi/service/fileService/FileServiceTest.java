@@ -1,17 +1,31 @@
 package my.photoapi.service.fileService;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import com.google.common.collect.Lists;
+import lombok.extern.log4j.Log4j2;
+import my.photoapi.service.locationservice.OpenMapService;
+import org.junit.jupiter.api.*;
 
-import java.util.List;
-import java.util.stream.Collectors;
 
-import static my.photoapi.TestUtils.TEST_FOLDER_PATH;
+import static my.photoapi.TestUtils.TEST_PHOPTOS_PATH;
+import static my.photoapi.TestUtils.UNIT_TEST;
 import static org.assertj.core.api.Assertions.assertThat;
 
+
+@Tag(UNIT_TEST)
+@Log4j2
 class FileServiceTest {
 
-    private FileService fileService;
+    private  FileService fileService;
+
+    @BeforeAll
+    static void startTest() {
+        log.info("start {}", FileServiceTest.class.getSimpleName());
+    }
+
+    @AfterAll
+    static void finishTest() {
+        log.info("finish {}", FileServiceTest.class.getSimpleName());
+    }
 
     @BeforeEach
     void setup() {
@@ -19,19 +33,32 @@ class FileServiceTest {
     }
 
     @Test
-    void getPhotosFromSourceFolder() {
-        var photos = fileService.getPhotosFromSource(TEST_FOLDER_PATH);
+    void should_return_photos_from_source_folder() {
+        // when
+        var photoFiles = fileService.getPhotosFilesFromSourceFolder(TEST_PHOPTOS_PATH);
 
-        assertThat(photos).isNotNull();
-        assertThat(photos).isNotEmpty();
+        // then
+        assertThat(photoFiles).isNotNull();
+        assertThat(photoFiles.size()).isEqualTo(3);
     }
 
     @Test
-    void getJpegPhotosFromSourceFolder(){
-        var jpegPhotos = fileService.getPhotosFromSource(TEST_FOLDER_PATH, true, List.of("jpg"));
+    void should_return_photos_from_source_folder_recursively() {
+        // when
+        var photoFiles = fileService.getPhotosFilesFromSourceFolder(TEST_PHOPTOS_PATH, true);
 
-        assertThat(jpegPhotos).isNotNull();
-        assertThat(jpegPhotos).isNotEmpty();
-        assertThat(jpegPhotos.stream().filter(photo -> photo.getName().endsWith("jpg")).collect(Collectors.toList()).size()).isEqualTo(jpegPhotos.size());
+        // then
+        assertThat(photoFiles).isNotNull();
+        assertThat(photoFiles.size()).isEqualTo(5);
+    }
+
+    @Test
+    void should_return_photos_from_source_folder_recursively_by_file_type() {
+        // when
+        var photoFiles = fileService.getPhotosFilesFromSourceFolder(TEST_PHOPTOS_PATH, true, Lists.newArrayList("jpeg", "JPG", "webp"));
+
+        // then
+        assertThat(photoFiles).isNotNull();
+        assertThat(photoFiles.size()).isEqualTo(7);
     }
 }

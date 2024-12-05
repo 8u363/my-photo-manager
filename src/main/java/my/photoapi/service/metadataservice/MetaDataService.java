@@ -20,47 +20,51 @@ import static net.logstash.logback.argument.StructuredArguments.kv;
 public class MetaDataService implements IMetaDataService {
 
     @Override
-    public MetaData createMetaData(@NonNull Path photoFilePath) {
+    public MetaData createMetaDataFromPhotoFile(@NonNull Path photoFilePath) {
         log.debug("create meta data from {}", kv("photoFilePath", photoFilePath));
 
-        var metaData = MetaData.builder(getHeight(photoFilePath.toFile()), getWidth(photoFilePath.toFile()), getCreationTimeStamp(photoFilePath.toFile()))
-                .withLongitude(getLongitude(photoFilePath.toFile()))
-                .withLatitude(getLatitude(photoFilePath.toFile()))
+        var photoHeight = readHeightFromPhotoMetaData(photoFilePath.toFile());
+        var photoWidth = readWidthPhotoFromPhotoMetaData(photoFilePath.toFile());
+        var photoCreationTimeStamp = readCreationTimeStampFromPhotoMetaData(photoFilePath.toFile());
+
+        var metaData = MetaData.builder(photoHeight, photoWidth, photoCreationTimeStamp)
+                .withLongitude(readLongitudeFromPhotoMetaData(photoFilePath.toFile()))
+                .withLatitude(readLatitudeFromPhotoMetaData(photoFilePath.toFile()))
                 .build();
 
         log.info("created {}", kv("meta data", metaData));
         return metaData;
     }
 
-    private int getHeight(@NonNull File photo) {
+    private int readHeightFromPhotoMetaData(@NonNull File photo) {
         var height = 0;
 
         try {
             var imageInfo = Imaging.getImageInfo(photo);
             height = imageInfo.getHeight();
-        } catch (IllegalArgumentException | IOException | ImageReadException ignored) {
-            // ignore the exception and return a height of 0
+        } catch (IllegalArgumentException | IOException | ImageReadException e) {
+            log.info("an exception occurred {}. will return 0 as height", e.getMessage());
         }
 
         log.debug("{} has {}", kv("photo", photo), kv("height", height));
         return height;
     }
 
-    private int getWidth(@NonNull File photo) {
+    private int readWidthPhotoFromPhotoMetaData(@NonNull File photo) {
         var width = 0;
 
         try {
             var imageInfo = Imaging.getImageInfo(photo);
             width = imageInfo.getWidth();
-        } catch (IllegalArgumentException | IOException | ImageReadException ignored) {
-            // ignore the exception and return a width of 0
+        } catch (IllegalArgumentException | IOException | ImageReadException e) {
+            log.info("an exception occurred {}. will return 0 as width", e.getMessage());
         }
 
         log.debug("{} has {}", kv("photo", photo), kv("width", width));
         return width;
     }
 
-    private String getCreationTimeStamp(@NonNull File photo) {
+    private String readCreationTimeStampFromPhotoMetaData(@NonNull File photo) {
         var creationTimeStamp = Strings.EMPTY;
 
         try {
@@ -71,15 +75,15 @@ public class MetaDataService implements IMetaDataService {
                     creationTimeStamp = exifValue.getStringValue();
                 }
             }
-        } catch (ImageReadException | IOException ignored) {
-            // ignore the exception and return an empty string
+        } catch (IllegalArgumentException | ImageReadException | IOException e) {
+            log.info("an exception occurred {}. will return empty string as creation time stamp", e.getMessage());
         }
 
         log.debug("{} has {}", kv("photo", photo), kv("creationTimeStamp", creationTimeStamp));
         return creationTimeStamp;
     }
 
-    private double getLongitude(@NonNull File photo) {
+    private double readLongitudeFromPhotoMetaData(@NonNull File photo) {
         var longitude = 0.0;
 
         try {
@@ -101,7 +105,7 @@ public class MetaDataService implements IMetaDataService {
         return longitude;
     }
 
-    private double getLatitude(@NonNull File photo) {
+    private double readLatitudeFromPhotoMetaData(@NonNull File photo) {
         var latitude = 0.0;
 
         try {

@@ -10,11 +10,19 @@ import java.util.List;
 
 public interface IFileService {
 
-    default Collection<File> getPhotosFromSource(Path sourceFolderPath) {
-        return getPhotosFromSource(sourceFolderPath, true, Lists.newArrayList("jpg"));
+    default Collection<File> getPhotosFilesFromSourceFolder(Path sourceFolderPath) {
+        return getPhotosFilesFromSourceFolder(sourceFolderPath, false);
     }
 
-    default Collection<File> getPhotosFromSource(Path sourceFolderPath, boolean recursive, List<String> photoExtension) {
-        return FileUtils.listFiles(sourceFolderPath.toFile(), photoExtension.toArray(String[]::new), recursive);
+    default Collection<File> getPhotosFilesFromSourceFolder(Path sourceFolderPath, boolean recursive) {
+        return getPhotosFilesFromSourceFolder(sourceFolderPath, recursive, Lists.newArrayList("jpeg", "jpg"));
+    }
+
+    default Collection<File> getPhotosFilesFromSourceFolder(Path sourceFolderPath, boolean recursive, List<String> photoExtension) {
+        return FileUtils.listFiles(sourceFolderPath.toFile(),
+                photoExtension.stream()
+                        .map(extension -> extension.toLowerCase())
+                        .toArray(String[]::new),
+                recursive);
     }
 }

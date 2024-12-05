@@ -6,7 +6,7 @@ import my.photoapi.model.label.Label;
 
 import java.util.List;
 
-@Builder(setterPrefix = "with")
+@Builder(setterPrefix = "with", builderMethodName = "")
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
@@ -15,6 +15,11 @@ import java.util.List;
 @ToString
 @Getter
 public class Photo implements IPhoto {
+
+    public static Photo.PhotoBuilder builder(String filePath, String hashValue) {
+        return new Photo.PhotoBuilder().withFilePath(filePath).withHashValue(hashValue);
+    }
+
     @Id
     @GeneratedValue
     @Column(updatable = false)
@@ -25,7 +30,7 @@ public class Photo implements IPhoto {
     @Column(unique = true)
     private String hashValue;
     @NonNull
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     @Singular
     private List<Label> labels;
 }

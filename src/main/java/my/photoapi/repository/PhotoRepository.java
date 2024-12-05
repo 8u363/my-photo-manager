@@ -1,13 +1,19 @@
 package my.photoapi.repository;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.jpa.repository.JpaRepository;
-
 import my.photoapi.model.photo.Photo;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface PhotoRepository extends JpaRepository<Photo, Long> {
 
     Optional<Photo> findByHashValue(String hashValue);
+
+    @Query("SELECT p FROM Photo p JOIN p.labels l WHERE l.text LIKE :labelNames")
+    Page<Photo> findByLabelNames(@Param("labelNames") String labelNames, Pageable pageable);
 }

@@ -2,6 +2,7 @@ package my.photoapi.service.photoservice;
 
 import lombok.NonNull;
 import my.photoapi.model.label.ILabel;
+import my.photoapi.model.label.Label;
 import my.photoapi.model.photo.Photo;
 import org.springframework.data.domain.Page;
 
@@ -14,5 +15,7 @@ public interface IPhotoService<T extends Photo> {
 
     Page<T> getPhotos(int page, int size);
 
-    Page<T> getPhotos(int page, int size, List<ILabel> labels);
+    Page<T> getPhotos(int page, int size, List<String> labelNames);
+
+    List<? extends ILabel> getLabels();
 }

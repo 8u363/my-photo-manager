@@ -1,17 +1,32 @@
 package my.photoapi.service.locationservice;
 
+import lombok.extern.log4j.Log4j2;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.jupiter.params.provider.CsvSource;
 
-import java.util.stream.Stream;
-
+import static my.photoapi.TestUtils.UNIT_TEST;
 import static org.assertj.core.api.Assertions.assertThat;
 
+
+@Tag(UNIT_TEST)
+@Log4j2
 class OpenMapServiceTest {
 
     private OpenMapService openMapService;
+
+    @BeforeAll
+    static void startTest() {
+        log.info("start {}", OpenMapServiceTest.class.getSimpleName());
+    }
+
+    @AfterAll
+    static void finishTest() {
+        log.info("finish {}", OpenMapServiceTest.class.getSimpleName());
+    }
 
     @BeforeEach
     void setup() {
@@ -19,10 +34,10 @@ class OpenMapServiceTest {
     }
 
     @ParameterizedTest
-    @MethodSource("getValidGpsData()")
-    void createLocationWithValidGpsData(double latitude, double longitude) {
+    @CsvSource({"48.86, 2.35", "45.23, -73.58", "-33.87, 151.21", "-22.90, -43.17"})
+    void should_return_location_object_from_latitude_and_longitude(double latitude, double longitude) {
         // when
-        var location = openMapService.createLocation(latitude, longitude);
+        var location = openMapService.createLocationFromLatitudeAndLongitude(latitude, longitude);
 
         // then
         assertThat(location).isNotNull();
@@ -32,20 +47,11 @@ class OpenMapServiceTest {
         assertThat(location.getStreet()).isNotEmpty();
     }
 
-    private static Stream<Arguments> getValidGpsData() {
-        return Stream.of(
-                Arguments.of(48.86, 2.35),
-                Arguments.of(45.23, -73.58),
-                Arguments.of(-33.87, 151.21),
-                Arguments.of(-22.90, -43.17)
-        );
-    }
-
     @ParameterizedTest
-    @MethodSource("getInvalidGpsData")
-    void createEmptyLocationWithNonExistingGPSData(long latitude, long longitude) {
+    @CsvSource({"91, 0", "-91, 0", "0, 181", "0, -181"})
+    void should_return_empty_location_object_from_latitude_and_longitude(double latitude, double longitude) {
         // when
-        var location = openMapService.createLocation(latitude, longitude);
+        var location = openMapService.createLocationFromLatitudeAndLongitude(latitude, longitude);
 
         // then
         assertThat(location).isNotNull();
@@ -54,14 +60,5 @@ class OpenMapServiceTest {
         assertThat(location.getPostalCode()).isEmpty();
         assertThat(location.getStreet()).isEmpty();
         assertThat(location.getHouseNumber()).isEmpty();
-    }
-
-    private final static Stream<Arguments> getInvalidGpsData() {
-        return Stream.of(
-                Arguments.of(91, 0),
-                Arguments.of(-91, 0),
-                Arguments.of(0, 181),
-                Arguments.of(0, -181)
-        );
     }
 }

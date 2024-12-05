@@ -17,12 +17,12 @@ import static net.logstash.logback.argument.StructuredArguments.kv;
 public class OpenMapService implements ILocationService {
 
     @Override
-    public ILocation createLocation(double latitude, double longitude) {
+    public ILocation createLocationFromLatitudeAndLongitude(double latitude, double longitude) {
         log.debug("create location from {}, {}", kv("latitude", latitude), kv("longitude", longitude));
 
         var openStreetMapURL = "https://nominatim.openstreetmap.org/reverse.php?lat=" + latitude + "&lon=" + longitude
                 + "&format=jsonv2";
-        log.debug("{}", kv("openStreetMapURL", openStreetMapURL));
+        log.debug("use {}", kv("openStreetMapURL", openStreetMapURL));
 
         var location = Location.builder().build();
         try {

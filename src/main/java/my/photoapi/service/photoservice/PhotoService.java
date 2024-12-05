@@ -5,7 +5,6 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
-import my.photoapi.model.label.ILabel;
 import my.photoapi.model.label.Label;
 import my.photoapi.model.label.LabelCategory;
 import my.photoapi.model.photo.Photo;
@@ -15,7 +14,6 @@ import my.photoapi.service.locationservice.OpenMapService;
 import my.photoapi.service.metadataservice.MetaData;
 import my.photoapi.service.metadataservice.MetaDataService;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -27,6 +25,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static net.logstash.logback.argument.StructuredArguments.kv;
 
@@ -62,38 +61,44 @@ public class PhotoService implements IPhotoService<Photo> {
     @Override
     public Page<Photo> getPhotos(int page, int size) {
         Pageable pageRequest = PageRequest.of(page, size);
-        return repository.findAll(pageRequest);
+        //log.debug("{}", kv("pageRequest", pageRequest));
+        var pageContent =  repository.findAll(pageRequest);
+        //log.debug("{} {}", kv("pageContent", pageContent), kv("getContent", pageContent.getContent()));
+        return pageContent;
+
     }
 
     @Override
-    public Page<Photo> getPhotos(int page, int size, List<ILabel> labels) {
-        return null;
+    public Page<Photo> getPhotos(int page, int size, List<String> labelNames) {
+        Pageable pageRequest = PageRequest.of(page, size);
+
+        if (labelNames.isEmpty()) {
+            return getPhotos(page, size);
+        }
+
+        return repository.findByLabelNames(String.join(" ", labelNames), pageRequest);
+    }
+
+    @Override
+    public List<Label> getLabels() {
+        return repository.findAll().stream()
+                .map(photo -> photo.getLabels())
+                .flatMap(List::stream)
+                .distinct()
+                .collect(Collectors.toList());
     }
 
     private Photo createPhoto(@NonNull Path photoFilePath) throws IOException {
-        var metaData = metaDataService.createMetaData(photoFilePath);
-        var location = locationService.createLocation(metaData.getLatitude(), metaData.getLongitude());
+        var metaData = metaDataService.createMetaDataFromPhotoFile(photoFilePath);
+        var location = locationService.createLocationFromLatitudeAndLongitude(metaData.getLatitude(), metaData.getLongitude());
 
-        var photo = Photo.builder()
-                .withHashValue(getHashValue(photoFilePath.toFile()))
-                .withFilePath(photoFilePath.toAbsolutePath().toString())
-                .withLabel(Label.builder("Test Tag", LabelCategory.LOCATION).build())
+        var photo = Photo.builder(photoFilePath.toAbsolutePath().toString(), getHashValue(photoFilePath.toFile()))
                 .withLabels(getLabelsFromMetaData(metaData))
                 .withLabels(getLabelsFromLocation((Location) location))
                 .build();
 
         log.debug("created {}", kv("photo", photo));
         return photo;
-    }
-
-    private Page<Photo> getPage(int page, int size, List<Photo> photos) {
-        Pageable pageRequest = PageRequest.of(page, size);
-
-        int start = (int) pageRequest.getOffset();
-        int end = Math.min((start + pageRequest.getPageSize()), photos.size());
-
-        List<Photo> pageContent = photos.subList(start, end);
-        return new PageImpl<>(pageContent, pageRequest, photos.size());
     }
 
     private String getHashValue(@NonNull File photo) throws IOException {
