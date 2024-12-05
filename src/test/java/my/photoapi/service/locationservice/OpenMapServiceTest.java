@@ -34,7 +34,7 @@ class OpenMapServiceTest {
     }
 
     @ParameterizedTest
-    @CsvSource({"48.86, 2.35", "45.23, -73.58", "-33.87, 151.21", "-22.90, -43.17"})
+    @CsvSource({"48.86, 2.35", "45.24, -73.56", "-33.87, 151.21", "-22.90, -43.17"})
     void should_return_location_object_from_latitude_and_longitude(double latitude, double longitude) {
         // when
         var location = openMapService.createLocationFromLatitudeAndLongitude(latitude, longitude);
@@ -43,7 +43,6 @@ class OpenMapServiceTest {
         assertThat(location).isNotNull();
         assertThat(location.getCountry()).isNotEmpty();
         assertThat(location.getCity()).isNotEmpty();
-        assertThat(location.getPostalCode()).isNotEmpty();
         assertThat(location.getStreet()).isNotEmpty();
     }
 

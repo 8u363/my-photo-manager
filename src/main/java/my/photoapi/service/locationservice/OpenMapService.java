@@ -29,12 +29,25 @@ public class OpenMapService implements ILocationService {
             var jsonResponse = new JSONObject(IOUtils.toString(new URL(openStreetMapURL), StandardCharsets.UTF_8));
             if (jsonResponse.has("address")) {
                 var addressJson = jsonResponse.getJSONObject("address");
+
+                var country = addressJson.optString("country", Strings.EMPTY);
+                var city = Strings.EMPTY;
+                if (addressJson.has("city")){
+                    city = addressJson.optString("city", Strings.EMPTY);
+                }
+                if (addressJson.has("village")){
+                    city = addressJson.optString("village", Strings.EMPTY);
+                }
+                var postcode = addressJson.optString("postcode", Strings.EMPTY);
+                var street = addressJson.optString("road", Strings.EMPTY);
+                var houseNumber = addressJson.optString("house_number", Strings.EMPTY);
+
                 location = Location.builder()
-                        .withCountry(addressJson.optString("country", Strings.EMPTY))
-                        .withCity(addressJson.optString("city", Strings.EMPTY))
-                        .withPostalCode(addressJson.optString("postcode", Strings.EMPTY))
-                        .withStreet(addressJson.optString("road", Strings.EMPTY))
-                        .withHouseNumber(addressJson.optString("house_number", Strings.EMPTY))
+                        .withCountry(country)
+                        .withCity(city)
+                        .withPostalCode(postcode)
+                        .withStreet(street)
+                        .withHouseNumber(houseNumber)
                         .build();
             }
         } catch (IOException ignored) {
