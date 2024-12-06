@@ -57,7 +57,13 @@ task runUnitTests(type: Test) {
     }
 }
 
-task runAllTest(type: Test) {
+task runIntegrationTests(type: Test) {
+    useJUnitPlatform {
+        includeTags("INTEGRATION-TEST", "UNIT-TEST")
+    }
+}
+
+task runAllTests(type: Test) {
     useJUnitPlatform {
         includeTags("INTEGRATION-TEST", "UNIT-TEST")
     }
