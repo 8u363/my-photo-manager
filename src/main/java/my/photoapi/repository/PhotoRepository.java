@@ -14,6 +14,6 @@ public interface PhotoRepository extends JpaRepository<Photo, Long> {
 
     Optional<Photo> findByHashValue(String hashValue);
 
-    @Query("SELECT p FROM Photo p JOIN p.labels l WHERE l.text LIKE :labelNames")
-    Page<Photo> findByLabelNames(@Param("labelNames") String labelNames, Pageable pageable);
+    @Query("SELECT p FROM Photo p JOIN p.labels l WHERE l.text IN :labelNames")
+    Page<Photo> findByLabelNames(@Param("labelNames") List<String> labelNames, Pageable pageable);
 }

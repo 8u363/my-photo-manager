@@ -1,10 +1,6 @@
 package my.photoapi;
 
-import my.photoapi.service.locationservice.Location;
-import my.photoapi.service.metadataservice.MetaData;
-
 import java.nio.file.Path;
-import java.time.LocalDateTime;
 import java.util.stream.Stream;
 
 public class TestUtils {

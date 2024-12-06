@@ -2,7 +2,6 @@ package my.photoapi.service.metadataservice;
 
 import lombok.NonNull;
 import lombok.extern.log4j.Log4j2;
-import org.apache.commons.imaging.ImageReadException;
 import org.apache.commons.imaging.Imaging;
 import org.apache.commons.imaging.formats.jpeg.JpegImageMetadata;
 import org.apache.commons.imaging.formats.tiff.constants.TiffTagConstants;
@@ -42,7 +41,7 @@ public class MetaDataService implements IMetaDataService {
         try {
             var imageInfo = Imaging.getImageInfo(photo);
             height = imageInfo.getHeight();
-        } catch (IllegalArgumentException | IOException | ImageReadException e) {
+        } catch (IllegalArgumentException | IOException  e) {
             log.info("an exception occurred {}. will return 0 as height", e.getMessage());
         }
 
@@ -56,7 +55,7 @@ public class MetaDataService implements IMetaDataService {
         try {
             var imageInfo = Imaging.getImageInfo(photo);
             width = imageInfo.getWidth();
-        } catch (IllegalArgumentException | IOException | ImageReadException e) {
+        } catch (IllegalArgumentException | IOException e) {
             log.info("an exception occurred {}. will return 0 as width", e.getMessage());
         }
 
@@ -70,12 +69,12 @@ public class MetaDataService implements IMetaDataService {
         try {
             var jpegImageMetadata = (JpegImageMetadata) Imaging.getMetadata(photo);
             if (jpegImageMetadata != null) {
-                var exifValue = jpegImageMetadata.findEXIFValueWithExactMatch(TiffTagConstants.TIFF_TAG_DATE_TIME);
+                var exifValue = jpegImageMetadata.findExifValueWithExactMatch(TiffTagConstants.TIFF_TAG_DATE_TIME);
                 if (exifValue != null) {
                     creationTimeStamp = exifValue.getStringValue();
                 }
             }
-        } catch (IllegalArgumentException | ImageReadException | IOException e) {
+        } catch (IllegalArgumentException | IOException e) {
             log.info("an exception occurred {}. will return empty string as creation time stamp", e.getMessage());
         }
 
@@ -91,13 +90,13 @@ public class MetaDataService implements IMetaDataService {
             if (jpegImageMetaData != null) {
                 var exifData = jpegImageMetaData.getExif();
                 if (exifData != null) {
-                    var gpsInfo = exifData.getGPS();
+                    var gpsInfo = exifData.getGpsInfo();
                     if (gpsInfo != null) {
                         longitude = gpsInfo.getLongitudeAsDegreesEast();
                     }
                 }
             }
-        } catch (IllegalArgumentException | IOException | ImageReadException ignored) {
+        } catch (IllegalArgumentException | IOException  ignored) {
             // ignore the exception and return a longitude of 0
         }
 
@@ -113,13 +112,13 @@ public class MetaDataService implements IMetaDataService {
             if (jpegImageMetaData != null) {
                 var exifData = jpegImageMetaData.getExif();
                 if (exifData != null) {
-                    var gpsInfo = exifData.getGPS();
+                    var gpsInfo = exifData.getGpsInfo();
                     if (gpsInfo != null) {
                         latitude = gpsInfo.getLatitudeAsDegreesNorth();
                     }
                 }
             }
-        } catch (IllegalArgumentException | IOException | ImageReadException ignored) {
+        } catch (IllegalArgumentException | IOException  ignored) {
             // ignore the exception and return a latitude of 0
         }
 
