@@ -68,13 +68,16 @@ public class PhotoService implements IPhotoService<Photo> {
 
     @Override
     public Page<Photo> getPhotos(int page, int size, List<String> labelNames) {
+        log.info("{}", kv("labelNames", labelNames));
         Pageable pageRequest = PageRequest.of(page, size);
 
         if (labelNames.isEmpty()) {
             return getPhotos(page, size);
         }
 
-        return repository.findByLabelNames(String.join(" ", labelNames), pageRequest);
+        //return repository.findByLabelNames(String.join(" ", labelNames), pageRequest);
+        return repository.findByLabelNames(labelNames, pageRequest);
+
     }
 
     @Override
@@ -115,8 +118,9 @@ public class PhotoService implements IPhotoService<Photo> {
     }
 
     private List<Label> getLabelsFromMetaData(@NonNull MetaData metaData) {
-        var dimensionTag = Label.builder(metaData.getWidth() + " " + metaData.getHeight(), LabelCategory.DIMENSION).build();
+        var dimensionWidthTag = Label.builder(Integer.toString(metaData.getWidth()) , LabelCategory.DIMENSION).build();
+        var dimensionHeightTag = Label.builder(Integer.toString(metaData.getHeight()) , LabelCategory.DIMENSION).build();
 
-        return Lists.newArrayList(dimensionTag);
+        return Lists.newArrayList(dimensionWidthTag, dimensionHeightTag);
     }
 }

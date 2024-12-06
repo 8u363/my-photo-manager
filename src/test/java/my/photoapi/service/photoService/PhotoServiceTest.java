@@ -116,8 +116,8 @@ class PhotoServiceTest {
 
 
     @ParameterizedTest
-    @CsvSource({"1024, 3"})
-    void test_get_photos_by_page_filtered_by_labels(String labels, int expectedPageContent) {
+    @CsvSource({"1024, 4", "768, 1"})
+    void test_get_photos_by_page_filtered_by_labels(String labels, int expectedPageContentSize) {
         // given
         photoService.savePhotoIfNotExists(TEST_PHOTO_LONDON);
         photoService.savePhotoIfNotExists(TEST_PHOTO_PARIS);
@@ -129,7 +129,7 @@ class PhotoServiceTest {
 
         // then
         assertThat(firstPage).isNotNull();
-        assertThat(firstPage.getContent().size()).isEqualTo(2);
+        assertThat(firstPage.getContent().size()).isEqualTo(expectedPageContentSize);
 
     }
 
