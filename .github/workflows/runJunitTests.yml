@@ -20,4 +20,4 @@ jobs:
         run: chmod +x gradlew
 
       - name: Run JUnit tests
-        run: ./gradlew runUnitTests
+        run: cd backend &&  ./gradlew runUnitTests
