@@ -1,6 +1,6 @@
-name: Run JUnit tests
+name: run all tests
 
-on: [push]
+on: [pull_request]
 
 jobs:
   test:
@@ -8,6 +8,9 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+
+      - name: switch to backend directory
+        run: cd backend
 
       - name: Set up JDK 17
         uses: actions/setup-java@v2
@@ -19,5 +22,5 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
-      - name: Run JUnit tests
-        run: cd backend &&  ./gradlew runUnitTests
+      - name: Run all tests
+        run: ./gradlew runAllTest
