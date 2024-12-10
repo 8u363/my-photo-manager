@@ -1,4 +1,4 @@
-package my.photomanager.service;
+package my.photomanager.service.location;
 
 import static my.photomanager.TestConstants.UNIT_TEST;
 import static org.assertj.core.api.Assertions.assertThat;

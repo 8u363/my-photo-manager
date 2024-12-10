@@ -1,4 +1,4 @@
-package my.photomanager.service;
+package my.photomanager.service.location;
 
 public interface ILocation {
 
