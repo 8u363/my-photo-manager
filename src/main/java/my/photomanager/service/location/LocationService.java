@@ -1,4 +1,4 @@
-package my.photomanager.service;
+package my.photomanager.service.location;
 
 import static net.logstash.logback.argument.StructuredArguments.kv;
 

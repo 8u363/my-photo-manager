@@ -38,7 +38,7 @@ dependencies {
 	testCompileOnly 'org.projectlombok:lombok'
 	testAnnotationProcessor 'org.projectlombok:lombok'
 
-
+	implementation 'org.apache.commons:commons-imaging:1.0.0-alpha5'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	runtimeOnly 'com.h2database:h2'
 	annotationProcessor 'org.projectlombok:lombok'
@@ -64,6 +64,8 @@ tasks.register('runAllTests', Test) {
 	useJUnitPlatform {
 		includeTags("INTEGRATION-TEST", "UNIT-TEST")
 	}
+
+	finalizedBy jacocoTestReport
 }
 
 jacoco {
