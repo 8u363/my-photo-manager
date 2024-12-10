@@ -64,6 +64,8 @@ tasks.register('runAllTests', Test) {
 	useJUnitPlatform {
 		includeTags("INTEGRATION-TEST", "UNIT-TEST")
 	}
+
+	finalizedBy jacocoTestReport
 }
 
 jacoco {
