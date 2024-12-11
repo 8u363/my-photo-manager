@@ -37,7 +37,7 @@ dependencies {
 	annotationProcessor 'org.projectlombok:lombok'
 	testCompileOnly 'org.projectlombok:lombok'
 	testAnnotationProcessor 'org.projectlombok:lombok'
-
+	implementation 'com.google.guava:guava:32.0.0-android'
 	implementation 'org.apache.commons:commons-imaging:1.0.0-alpha5'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	runtimeOnly 'com.h2database:h2'
