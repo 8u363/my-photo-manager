@@ -3,9 +3,7 @@ package my.photomanager.service.metaData;
 import static my.photomanager.TestConstants.TEST_FILE_PATH;
 import static my.photomanager.TestConstants.UNIT_TEST;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
-import java.io.File;
 import java.nio.file.Path;
 import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.AfterAll;
@@ -19,6 +17,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 @Tag(UNIT_TEST)
 @Log4j2
 class MetaDataServiceTest {
+
 	private MetaDataService metaDataService;
 
 	@BeforeAll
@@ -53,7 +52,7 @@ class MetaDataServiceTest {
 
 	@ParameterizedTest
 	@MethodSource("my.photomanager.TestConstants#getPhotoFilesWithoutMetaData")
-	void should_return_empty_meta_data_object_from_photo_file_without_meta_data(Path photoFilePath){
+	void should_return_empty_meta_data_object_from_photo_file_without_meta_data(Path photoFilePath) {
 		// when
 		var metaData = metaDataService.buildMetaDataFromPhotoFile(photoFilePath.toFile());
 
@@ -69,7 +68,8 @@ class MetaDataServiceTest {
 	@Test
 	void should_return_empty_meta_data_from_non_photo_file() {
 		// when
-		var metaData = metaDataService.buildMetaDataFromPhotoFile(TEST_FILE_PATH.resolve("TextFile.txt").toFile());
+		var metaData = metaDataService.buildMetaDataFromPhotoFile(TEST_FILE_PATH.resolve("TextFile.txt")
+				.toFile());
 
 		// then
 		assertThat(metaData).isNotNull();
