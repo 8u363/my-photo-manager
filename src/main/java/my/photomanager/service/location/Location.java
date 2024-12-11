@@ -8,7 +8,6 @@ public record Location(String country,
 					   String houseNumber) implements ILocation {
 
 
-
 	@Override
 	public String getCountry() {
 		return country;
