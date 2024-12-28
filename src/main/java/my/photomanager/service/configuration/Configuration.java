@@ -12,8 +12,8 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
+import lombok.Setter;
 import lombok.ToString;
-import my.photomanager.model.photo.Photo;
 
 @Builder(setterPrefix = "with", builderMethodName = "")
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
@@ -30,12 +30,14 @@ public class Configuration {
 	@Column(updatable = false)
 	private long ID;
 	@NonNull
+	@Setter
 	@Column(unique = true)
 	private String folderPath;
 	@NonNull
+	@Setter
 	private String scanInterval;
 
-	public static Configuration.ConfigurationBuilder builder( String folderPath) {
+	public static Configuration.ConfigurationBuilder builder(String folderPath) {
 		return new Configuration.ConfigurationBuilder().withFolderPath(folderPath)
 				.withScanInterval("every 5 minutes");
 	}

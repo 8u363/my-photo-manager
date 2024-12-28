@@ -39,7 +39,7 @@ class MetaDataServiceTest {
 	@MethodSource("my.photomanager.TestConstants#getPhotoFilesWithMetaData")
 	void should_return_meta_data_object_from_photo_file(Path photoFilePath) {
 		// when
-		var metaData = metaDataService.buildMetaDataFromPhotoFile(photoFilePath.toFile());
+		var metaData = metaDataService.readMetaDataFromPhotoFile(photoFilePath.toFile());
 
 		// then
 		assertThat(metaData).isNotNull();
@@ -54,7 +54,7 @@ class MetaDataServiceTest {
 	@MethodSource("my.photomanager.TestConstants#getPhotoFilesWithoutMetaData")
 	void should_return_empty_meta_data_object_from_photo_file_without_meta_data(Path photoFilePath) {
 		// when
-		var metaData = metaDataService.buildMetaDataFromPhotoFile(photoFilePath.toFile());
+		var metaData = metaDataService.readMetaDataFromPhotoFile(photoFilePath.toFile());
 
 		// then
 		assertThat(metaData).isNotNull();
@@ -68,7 +68,7 @@ class MetaDataServiceTest {
 	@Test
 	void should_return_empty_meta_data_from_non_photo_file() {
 		// when
-		var metaData = metaDataService.buildMetaDataFromPhotoFile(TEST_FILE_PATH.resolve("TextFile.txt")
+		var metaData = metaDataService.readMetaDataFromPhotoFile(TEST_FILE_PATH.resolve("TextFile.txt")
 				.toFile());
 
 		// then

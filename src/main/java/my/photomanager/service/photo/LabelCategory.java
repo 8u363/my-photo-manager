@@ -1,4 +1,4 @@
-package my.photomanager.model.label;
+package my.photomanager.service.photo;
 
 public enum LabelCategory {
 	TIMESTAMP,

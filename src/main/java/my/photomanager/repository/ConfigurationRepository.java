@@ -6,5 +6,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface ConfigurationRepository extends JpaRepository<Configuration, Long> {
 
-	Optional<Configuration> findByFolderPathAndScanInterval(String folderPath, String scanInterval);
+	Optional<Configuration> findByFolderPathAndUpdateInterval(String folderPath, String updateInterval);
 }

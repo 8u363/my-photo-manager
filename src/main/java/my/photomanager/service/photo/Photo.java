@@ -1,4 +1,4 @@
-package my.photomanager.model.photo;
+package my.photomanager.service.photo;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -18,7 +18,6 @@ import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.Singular;
 import lombok.ToString;
-import my.photomanager.model.label.Label;
 
 @Builder(setterPrefix = "with", builderMethodName = "")
 @AllArgsConstructor(access = AccessLevel.PROTECTED)

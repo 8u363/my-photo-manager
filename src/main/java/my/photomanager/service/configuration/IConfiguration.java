@@ -1,5 +1,9 @@
 package my.photomanager.service.configuration;
 
-public interface IConfiguration {
+import my.photomanager.service.IDatabaseEntity;
 
+public interface IConfiguration  extends IDatabaseEntity {
+	String getFolderPath();
+
+	String getUpdateInterval();
 }

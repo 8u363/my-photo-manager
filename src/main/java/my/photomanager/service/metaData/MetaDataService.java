@@ -17,7 +17,7 @@ import org.springframework.stereotype.Service;
 public class MetaDataService implements IMetaDataService<MetaData> {
 
 	@Override
-	public MetaData buildMetaDataFromPhotoFile(@NonNull File photoFile) {
+	public MetaData readMetaDataFromPhotoFile(@NonNull File photoFile) {
 		log.debug("create meta data from {}", kv("photoFilePath", photoFile));
 
 		var photoHeight = readHeightFromPhotoMetaData(photoFile);

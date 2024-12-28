@@ -9,7 +9,7 @@ import lombok.AccessLevel;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
-import my.photomanager.model.photo.Photo;
+import my.photomanager.service.photo.Photo;
 import my.photomanager.service.photo.PhotoService;
 import my.photomanager.web.PhotoDTO;
 import org.springframework.context.annotation.Profile;

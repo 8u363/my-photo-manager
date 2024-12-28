@@ -5,5 +5,5 @@ import lombok.NonNull;
 
 public interface IMetaDataService<T extends IMetaData> {
 
-	T buildMetaDataFromPhotoFile(@NonNull File photoFile);
+	T readMetaDataFromPhotoFile(@NonNull File photoFile);
 }

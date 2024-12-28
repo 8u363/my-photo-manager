@@ -64,7 +64,7 @@ class PhotoServiceTest {
 	@MethodSource("my.photomanager.TestConstants#getPhotoFilesWithMetaData")
 	void should_return_saved_photo_if_not_exists_already(Path photoFilePath) {
 		// when
-		var photo = photoService.savePhotoIfNotExists(photoFilePath.toFile());
+		var photo = photoService.savePhoto(photoFilePath.toFile());
 
 		// then
 		assertThat(photo).isNotNull();
@@ -77,9 +77,9 @@ class PhotoServiceTest {
 	@Test
 	void should_return_existing_photo_when_try_to_save_again() {
 		// when
-		var firstPhoto = photoService.savePhotoIfNotExists(TEST_PHOPTOS_PATH.resolve(Path.of("withMetaData", "Brandenburg_Gate_with_metadata.jpg"))
+		var firstPhoto = photoService.savePhoto(TEST_PHOPTOS_PATH.resolve(Path.of("withMetaData", "Brandenburg_Gate_with_metadata.jpg"))
 				.toFile());
-		var secondPhoto = photoService.savePhotoIfNotExists(TEST_PHOPTOS_PATH.resolve(Path.of("withMetaData", "Brandenburg_Gate_with_metadata.jpg"))
+		var secondPhoto = photoService.savePhoto(TEST_PHOPTOS_PATH.resolve(Path.of("withMetaData", "Brandenburg_Gate_with_metadata.jpg"))
 				.toFile());
 
 		// then
@@ -91,9 +91,9 @@ class PhotoServiceTest {
 	@Test
 	void should_return_all_photos_in_one_page() {
 		// given
-		photoService.savePhotoIfNotExists(TEST_PHOTO_LONDON.toFile());
-		photoService.savePhotoIfNotExists(TEST_PHOTO_PARIS.toFile());
-		photoService.savePhotoIfNotExists(TEST_PHOTO_New_York.toFile());
+		photoService.savePhoto(TEST_PHOTO_LONDON.toFile());
+		photoService.savePhoto(TEST_PHOTO_PARIS.toFile());
+		photoService.savePhoto(TEST_PHOTO_New_York.toFile());
 
 		// when
 		var firstPage = photoService.getPhotos(0, 10);
@@ -111,9 +111,9 @@ class PhotoServiceTest {
 	@Test
 	void should_return_all_photos_in_multiple_pages() {
 		// given
-		photoService.savePhotoIfNotExists(TEST_PHOTO_LONDON.toFile());
-		photoService.savePhotoIfNotExists(TEST_PHOTO_PARIS.toFile());
-		photoService.savePhotoIfNotExists(TEST_PHOTO_New_York.toFile());
+		photoService.savePhoto(TEST_PHOTO_LONDON.toFile());
+		photoService.savePhoto(TEST_PHOTO_PARIS.toFile());
+		photoService.savePhoto(TEST_PHOTO_New_York.toFile());
 
 		// when
 		var firstPage = photoService.getPhotos(0, 2);
@@ -133,10 +133,10 @@ class PhotoServiceTest {
 	@CsvSource({"1024, 4", "768, 1"})
 	void test_get_photos_by_page_filtered_by_labels(String labels, int expectedPageContentSize) {
 		// given
-		photoService.savePhotoIfNotExists(TEST_PHOTO_LONDON.toFile());
-		photoService.savePhotoIfNotExists(TEST_PHOTO_PARIS.toFile());
-		photoService.savePhotoIfNotExists(TEST_PHOTO_New_York.toFile());
-		photoService.savePhotoIfNotExists(TEST_PHOPTOS_PATH.resolve(Path.of("withMetaData", "Brandenburg_Gate_with_metadata.jpg"))
+		photoService.savePhoto(TEST_PHOTO_LONDON.toFile());
+		photoService.savePhoto(TEST_PHOTO_PARIS.toFile());
+		photoService.savePhoto(TEST_PHOTO_New_York.toFile());
+		photoService.savePhoto(TEST_PHOPTOS_PATH.resolve(Path.of("withMetaData", "Brandenburg_Gate_with_metadata.jpg"))
 				.toFile());
 
 		// when
@@ -153,10 +153,10 @@ class PhotoServiceTest {
 	@Test
 	void should_return_empty_page_when_labels_are_unknown() {
 		// given
-		photoService.savePhotoIfNotExists(TEST_PHOTO_LONDON.toFile());
-		photoService.savePhotoIfNotExists(TEST_PHOTO_PARIS.toFile());
-		photoService.savePhotoIfNotExists(TEST_PHOTO_New_York.toFile());
-		photoService.savePhotoIfNotExists(TEST_PHOPTOS_PATH.resolve(Path.of("withMetaData", "Brandenburg_Gate_with_metadata.jpg"))
+		photoService.savePhoto(TEST_PHOTO_LONDON.toFile());
+		photoService.savePhoto(TEST_PHOTO_PARIS.toFile());
+		photoService.savePhoto(TEST_PHOTO_New_York.toFile());
+		photoService.savePhoto(TEST_PHOPTOS_PATH.resolve(Path.of("withMetaData", "Brandenburg_Gate_with_metadata.jpg"))
 				.toFile());
 
 		// when
@@ -171,8 +171,8 @@ class PhotoServiceTest {
 	@Test
 	void should_return_all_labels() {
 		// given
-		photoService.savePhotoIfNotExists(TEST_PHOTO_New_York.toFile());
-		photoService.savePhotoIfNotExists(TEST_PHOPTOS_PATH.resolve(Path.of("withMetaData", "Brandenburg_Gate_with_metadata.jpg"))
+		photoService.savePhoto(TEST_PHOTO_New_York.toFile());
+		photoService.savePhoto(TEST_PHOPTOS_PATH.resolve(Path.of("withMetaData", "Brandenburg_Gate_with_metadata.jpg"))
 				.toFile());
 
 		// when

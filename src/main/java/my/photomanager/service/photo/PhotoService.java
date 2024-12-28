@@ -13,9 +13,6 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
-import my.photomanager.model.label.Label;
-import my.photomanager.model.label.LabelCategory;
-import my.photomanager.model.photo.Photo;
 import my.photomanager.repository.PhotoRepository;
 import my.photomanager.service.location.Location;
 import my.photomanager.service.location.LocationService;
@@ -38,7 +35,7 @@ public class PhotoService implements IPhotoService<Photo> {
 
 	@SneakyThrows
 	@Override
-	public Photo savePhotoIfNotExists(@NonNull File photoFile) {
+	public Photo savePhoto(@NonNull File photoFile) {
 		var photo = buildPhoto(photoFile);
 		log.info("save {} if not exists", kv("photo", photo));
 
@@ -72,9 +69,7 @@ public class PhotoService implements IPhotoService<Photo> {
 			return getPhotos(page, size);
 		}
 
-		//return repository.findByLabelNames(String.join(" ", labelNames), pageRequest);
 		return repository.findByLabelNames(labelNames, pageRequest);
-
 	}
 
 	@Override
@@ -88,7 +83,7 @@ public class PhotoService implements IPhotoService<Photo> {
 	}
 
 	private Photo buildPhoto(@NonNull File photoFile) throws IOException {
-		var metaData = metaDataService.buildMetaDataFromPhotoFile(photoFile);
+		var metaData = metaDataService.readMetaDataFromPhotoFile(photoFile);
 		var location = locationService.buildLocationFromLongitudeAndLatitude(metaData.getLongitude(), metaData.getLatitude());
 
 		var photo = Photo.builder(photoFile.getAbsolutePath(), getHashValue(photoFile))
