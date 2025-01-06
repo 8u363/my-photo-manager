@@ -6,7 +6,7 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import my.photomanager.service.configuration.Configuration;
 import my.photomanager.service.configuration.ConfigurationService;
-import my.photomanager.web.ConfigurationDTO;
+import my.photomanager.v1.web.ConfigurationDTO;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -30,22 +30,26 @@ public class PhotoConfigurationController {
 
 	@PostMapping("/add")
 	public ConfigurationDTO addConfiguration(@RequestParam(value = "folderPath") String folderPath,
-			@RequestParam(value = "updateInterval", required = false) String updateInterval) {
-		// TODO
-		return null;
+			@RequestParam(value = "updateInterval") String updateInterval) {
+
+		var configuration = new Configuration(folderPath, updateInterval);
+		var savedConfiguration =  configurationService.saveConfiguration(configuration);
+
+		return mapConfigurationToDTO(savedConfiguration);
 	}
 
 	@PutMapping("/update")
 	public ConfigurationDTO updateConfiguration(@RequestParam(value = "ID") long ID,
 			@RequestParam(value = "folderPath") String newFolderPath,
-			@RequestParam(value = "updateInterval", required = false) String newUpdateInterval) {
-		// TODO
-		return null;
+			@RequestParam(value = "updateInterval") String newUpdateInterval) {
+
+		var configuration = configurationService.updateConfiguration(ID, newFolderPath, newUpdateInterval);
+		return mapConfigurationToDTO(configuration);
 	}
 
 	@DeleteMapping("/delete")
 	public void deleteConfiguration(@RequestParam(value = "ID") long ID) {
-		// TODO
+		configurationService.deleteConfiguration(ID);
 	}
 
 	private ConfigurationDTO mapConfigurationToDTO(@NonNull Configuration configuration) {

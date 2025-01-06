@@ -86,10 +86,8 @@ public class PhotoService implements IPhotoService<Photo> {
 		var metaData = metaDataService.readMetaDataFromPhotoFile(photoFile);
 		var location = locationService.buildLocationFromLongitudeAndLatitude(metaData.getLongitude(), metaData.getLatitude());
 
-		var photo = Photo.builder(photoFile.getAbsolutePath(), getHashValue(photoFile))
-				.withLabels(getLabelsFromMetaData(metaData))
-				.withLabels(getLabelsFromLocation(location))
-				.build();
+		List labels = Lists.newArrayList(getLabelsFromMetaData(metaData), getLabelsFromLocation(location));
+		var photo = new Photo(photoFile.getAbsolutePath(), getHashValue(photoFile), labels);
 
 		log.debug("created {}", kv("photo", photo));
 		return photo;

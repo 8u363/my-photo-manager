@@ -1,4 +1,4 @@
-package my.photomanager.service.configuration;
+package my.photomanager.v1.model;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -12,28 +12,35 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
 import lombok.ToString;
 
-@RequiredArgsConstructor(access = AccessLevel.PUBLIC)
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor(access = AccessLevel.PUBLIC)
+@NoArgsConstructor(access = AccessLevel.PUBLIC)
 @Entity
-@Table(name = "configuration")
+@Table(name = "label")
 @EqualsAndHashCode
 @ToString
 @Getter
-public class Configuration {
+public class Label {
+
+	public enum LabelCategory {
+		TIMESTAMP,
+		DIMENSION,
+		LOCATION
+	}
 
 	@Id
 	@GeneratedValue
 	@Column(updatable = false)
 	private long ID;
+
 	@NonNull
-	@Setter
-	@Column(unique = true)
-	private String folderPath;
+	private String text;
+
 	@NonNull
-	@Setter
-	private String scanInterval;
+	private LabelCategory category;
+
+	@NonNull
+	@Builder.Default
+	private String additionalContent = "";
 }

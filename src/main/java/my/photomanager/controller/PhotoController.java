@@ -11,7 +11,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import my.photomanager.service.photo.Photo;
 import my.photomanager.service.photo.PhotoService;
-import my.photomanager.web.PhotoDTO;
+import my.photomanager.v1.web.PhotoDTO;
 import org.springframework.context.annotation.Profile;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;

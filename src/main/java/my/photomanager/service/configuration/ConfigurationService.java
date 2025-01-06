@@ -30,7 +30,6 @@ public class ConfigurationService implements IConfigurationService<Configuration
 		repository.findByFolderPathAndUpdateInterval(folderPath, scanInterval)
 				.ifPresent(config -> new InternalError(""));
 
-
 		var savedConfiguration = repository.saveAndFlush(configuration);
 		log.info("saved {}", kv("configuration", savedConfiguration));
 
