@@ -1,0 +1,18 @@
+{
+    "workbench.colorTheme": "Default Dark+",
+    "editor.formatOnPaste": true,
+    "editor.formatOnSave": true,
+    "editor.formatOnType": true,
+    "workbench.startupEditor": "none",
+    "files.autoSave": "afterDelay",
+    "explorer.confirmDelete": true,
+    "terminal.integrated.cursorBlinking": true,
+    "editor.cursorBlinking": "expand",
+    "editor.fontFamily": "Jetbrains Mono",
+    "editor.fontLigatures": true,
+    "editor.bracketPairColorization.enabled": true,
+    "editor.smoothScrolling": true,
+    "editor.mouseWheelZoom": true,
+    "java.compile.nullAnalysis.mode": "automatic",
+    "editor.fontSize": 16
+}
