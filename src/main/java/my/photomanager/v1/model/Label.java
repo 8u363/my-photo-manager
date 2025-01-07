@@ -40,8 +40,4 @@ public class Label {
 	@NonNull
 	@Getter
 	private LabelCategory category;
-
-	@NonNull
-	@Getter
-	private String additionalContent;
 }
