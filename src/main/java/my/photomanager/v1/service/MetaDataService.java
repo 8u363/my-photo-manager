@@ -8,7 +8,6 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.imaging.Imaging;
-import org.apache.commons.imaging.ImagingException;
 import org.apache.commons.imaging.formats.jpeg.JpegImageMetadata;
 import org.apache.commons.imaging.formats.tiff.constants.TiffTagConstants;
 import org.apache.logging.log4j.util.Strings;
@@ -19,6 +18,13 @@ import org.springframework.stereotype.Service;
 @Log4j2
 public class MetaDataService {
 
+	/**
+	 * read the meta data of the photo file
+	 * build a meta data object with these informations
+	 * 
+	 * @param photoFile the photo file
+	 * @return the created meta data object
+	 */
 	public MetaData getMetaDataOfPhotoFile(@NonNull File photoFile) {
 		log.debug("get meta data of {}", kv("photoFilePath", photoFile));
 
@@ -34,27 +40,90 @@ public class MetaDataService {
 		return metaData;
 	}
 
-	private int getPhotoHeight(@NonNull File photoFile) throws IOException {
-		return Imaging.getImageInfo(photoFile)
-				.getHeight();
+	private int getPhotoHeight(@NonNull File photoFile) {
+		var photoHeight = 0;
+
+		try {
+			photoHeight = Imaging.getImageInfo(photoFile)
+					.getHeight();
+		} catch (IOException e) {
+			log.warn("an exception occurred {}. will return 0 as photo height", e.getMessage());
+		}
+
+		return photoHeight;
 	}
 
-	private int getPhotoWidth(@NonNull File photoFile) throws IOException {
-		return Imaging.getImageInfo(photoFile)
-				.getWidth();
+	private int getPhotoWidth(@NonNull File photoFile) {
+		var photoWidth = 0;
+
+		try {
+			photoWidth = Imaging.getImageInfo(photoFile)
+					.getWidth();
+		} catch (IOException e) {
+			log.warn("an exception occurred {}. will return 0 as photo width", e.getMessage());
+		}
+
+		return photoWidth;
 	}
 
-	private String getPhotoCreationTimeStamp(@NonNull File photoFile) throws IOException {
+	private String getPhotoCreationTimeStamp(@NonNull File photoFile) {
 		var creationTimeStamp = Strings.EMPTY;
 
-		var jpegImageMetadata = (JpegImageMetadata) Imaging.getMetadata(photoFile);
-		if (jpegImageMetadata != null) {
-			var exifValue = jpegImageMetadata.findExifValueWithExactMatch(TiffTagConstants.TIFF_TAG_DATE_TIME);
-			if (exifValue != null) {
-				creationTimeStamp = exifValue.getStringValue();
+		try {
+			var jpegImageMetadata = (JpegImageMetadata) Imaging.getMetadata(photoFile);
+			if (jpegImageMetadata != null) {
+				var exifValue = jpegImageMetadata.findExifValueWithExactMatch(TiffTagConstants.TIFF_TAG_DATE_TIME);
+				if (exifValue != null) {
+					creationTimeStamp = exifValue.getStringValue();
+				}
 			}
+		} catch (IllegalArgumentException | IOException e) {
+			log.warn("an exception occurred {}. will return empty string as creation time stamp", e.getMessage());
 		}
+
 		return creationTimeStamp;
+	}
+
+	private double readLongitudeFromPhotoMetaData(@NonNull File photo) {
+		var longitude = 0.0;
+
+		try {
+			var jpegImageMetaData = (JpegImageMetadata) Imaging.getMetadata(photo);
+			if (jpegImageMetaData != null) {
+				var exifData = jpegImageMetaData.getExif();
+				if (exifData != null) {
+					var gpsInfo = exifData.getGpsInfo();
+					if (gpsInfo != null) {
+						longitude = gpsInfo.getLongitudeAsDegreesEast();
+					}
+				}
+			}
+		} catch (IllegalArgumentException | IOException ignored) {
+			// ignore the exception and return a longitude of 0
+		}
+
+		return longitude;
+	}
+
+	private double readLatitudeFromPhotoMetaData(@NonNull File photo) {
+		var latitude = 0.0;
+
+		try {
+			var jpegImageMetaData = (JpegImageMetadata) Imaging.getMetadata(photo);
+			if (jpegImageMetaData != null) {
+				var exifData = jpegImageMetaData.getExif();
+				if (exifData != null) {
+					var gpsInfo = exifData.getGpsInfo();
+					if (gpsInfo != null) {
+						latitude = gpsInfo.getLatitudeAsDegreesNorth();
+					}
+				}
+			}
+		} catch (IllegalArgumentException | IOException ignored) {
+			// ignore the exception and return a latitude of 0
+		}
+
+		return latitude;
 	}
 
 	private record MetaData(int width, int height, @NonNull String creationTimeStamp, double longitude,

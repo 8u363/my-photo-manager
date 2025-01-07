@@ -18,10 +18,20 @@ public class ConfigurationService {
 
 	private final ConfigurationRepository repository;
 
+	/**
+	 * @return a list with all configuration objects
+	 */
 	public List<Configuration> getConfigurations() {
 		return repository.findAll();
 	}
 
+	/**
+	 * save a new configuration object
+	 * check if the configuration exists already
+	 * 
+	 * @param configuration the configuration
+	 * @return the saved configuration
+	 */
 	public Configuration saveConfiguration(@NonNull Configuration configuration) {
 		repository.findByFolderPathAndIndexInterval(
 				configuration.getFolderPath(), configuration.getUpdateInterval())
@@ -33,11 +43,26 @@ public class ConfigurationService {
 		return savedConfiguration;
 	}
 
-	public Configuration updateConfiguration(long ID, @NonNull String folderPath, @NonNull String updateInterval) {
+	/**
+	 * update an existing configuration object
+	 * 
+	 * @param ID            the existing configuration id
+	 * @param folderPath    the new folder path
+	 * @param indexInterval the new index interval
+	 * @return the updated configuration
+	 */
+	public Configuration updateConfiguration(long ID, @NonNull String folderPath, @NonNull String indexInterval) {
+		// TODO update configuration
 		return null;
 	}
 
+	/**
+	 * delete an existing configuration
+	 * 
+	 * @param ID the existing configuration id
+	 */
 	public void deleteConfiguration(long ID) {
+		// TODO delete configuration
 
 	}
 }

@@ -18,6 +18,15 @@ import org.springframework.stereotype.Service;
 @Log4j2
 public class LocationService {
 
+	/**
+	 * build a location object
+	 * use open street map to get the detailed data of the longitude and latitude
+	 * 
+	 * @param longitude the longitude
+	 * @param latitude  the latitude
+	 * @return the created location object
+	 * @throws IOException
+	 */
 	public Location getLocationOfLongitudeAndLatitude(double longitude, double latitude) throws IOException {
 		log.info("get location of {}, {}", kv("longitude", longitude), kv("latitude", latitude));
 
@@ -53,7 +62,8 @@ public class LocationService {
 		return location;
 	}
 
-	private record Location(@NonNull String country, @NonNull String city, @NonNull String postalCode, @NonNull String street, @NonNull String houseNumber) {
+	private record Location(@NonNull String country, @NonNull String city, @NonNull String postalCode,
+			@NonNull String street, @NonNull String houseNumber) {
 
 	}
 }
