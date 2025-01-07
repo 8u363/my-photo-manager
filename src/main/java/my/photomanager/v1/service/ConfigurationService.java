@@ -2,6 +2,8 @@ package my.photomanager.v1.service;
 
 import com.google.common.collect.Lists;
 import java.util.List;
+
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import my.photomanager.v1.model.Configuration;
@@ -16,11 +18,11 @@ public class ConfigurationService {
 		return Lists.newArrayList();
 	}
 
-	public Configuration saveConfiguration(Configuration configuration) {
+	public Configuration saveConfiguration(@NonNull Configuration configuration) {
 		return null;
 	}
 
-	public Configuration updateConfiguration(long ID, String folderPath, String scanInterval) {
+	public Configuration updateConfiguration(long ID, @NonNull String folderPath, @NonNull String updateInterval) {
 		return null;
 	}
 

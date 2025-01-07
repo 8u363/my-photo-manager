@@ -8,6 +8,10 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.imaging.Imaging;
+import org.apache.commons.imaging.ImagingException;
+import org.apache.commons.imaging.formats.jpeg.JpegImageMetadata;
+import org.apache.commons.imaging.formats.tiff.constants.TiffTagConstants;
+import org.apache.logging.log4j.util.Strings;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -20,7 +24,7 @@ public class MetaDataService {
 
 		var photoHeight = getPhotoHeight(photoFile);
 		var photoWidth = getPhotoWidth(photoFile);
-		var photoCreationTimeStamp = readCreationTimeStampFromPhotoMetaData(photoFile);
+		var photoCreationTimeStamp = getPhotoCreationTimeStamp(photoFile);
 		var longitude = readLongitudeFromPhotoMetaData(photoFile);
 		var latitude = readLatitudeFromPhotoMetaData(photoFile);
 
@@ -30,23 +34,31 @@ public class MetaDataService {
 		return metaData;
 	}
 
-	private int getPhotoHeight(@NonNull File photo) {
-		var height = Imaging.getImageInfo(photo)
+	private int getPhotoHeight(@NonNull File photoFile) throws IOException {
+		return Imaging.getImageInfo(photoFile)
 				.getHeight();
-
-		log.debug("{} has {}", kv("photo", photo), kv("height", height));
-		return height;
 	}
 
-	private int getPhotoWidth(@NonNull File photo) throws IOException {
-		var width = Imaging.getImageInfo(photo)
+	private int getPhotoWidth(@NonNull File photoFile) throws IOException {
+		return Imaging.getImageInfo(photoFile)
 				.getWidth();
-
-		log.debug("{} has {}", kv("photo", photo), kv("width", width));
-		return width;
 	}
 
-	private record MetaData(int width, int height, @NonNull String creationTimeStamp, double longitude, double latitude) {
+	private String getPhotoCreationTimeStamp(@NonNull File photoFile) throws IOException {
+		var creationTimeStamp = Strings.EMPTY;
+
+		var jpegImageMetadata = (JpegImageMetadata) Imaging.getMetadata(photoFile);
+		if (jpegImageMetadata != null) {
+			var exifValue = jpegImageMetadata.findExifValueWithExactMatch(TiffTagConstants.TIFF_TAG_DATE_TIME);
+			if (exifValue != null) {
+				creationTimeStamp = exifValue.getStringValue();
+			}
+		}
+		return creationTimeStamp;
+	}
+
+	private record MetaData(int width, int height, @NonNull String creationTimeStamp, double longitude,
+			double latitude) {
 
 	}
 };

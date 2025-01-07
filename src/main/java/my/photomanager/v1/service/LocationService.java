@@ -47,7 +47,10 @@ public class LocationService {
 			houseNumber = addressJson.optString("house_number", Strings.EMPTY);
 		}
 
-		return new Location(country, city, postcode, street, houseNumber);
+		var location = new Location(country, city, postcode, street, houseNumber);
+		log.info("{}", kv("location", location));
+
+		return location;
 	}
 
 	private record Location(@NonNull String country, @NonNull String city, @NonNull String postalCode, @NonNull String street, @NonNull String houseNumber) {
