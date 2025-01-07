@@ -7,7 +7,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,7 +19,6 @@ import lombok.ToString;
 @Table(name = "label")
 @EqualsAndHashCode
 @ToString
-@Getter
 public class Label {
 
 	public enum LabelCategory {
@@ -29,18 +27,21 @@ public class Label {
 		LOCATION
 	}
 
+	@Getter
 	@Id
 	@GeneratedValue
 	@Column(updatable = false)
 	private long ID;
 
 	@NonNull
+	@Getter
 	private String text;
 
 	@NonNull
+	@Getter
 	private LabelCategory category;
 
 	@NonNull
-	@Builder.Default
-	private String additionalContent = "";
+	@Getter
+	private String additionalContent;
 }

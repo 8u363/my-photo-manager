@@ -20,20 +20,22 @@ import lombok.ToString;
 @Table(name = "configuration")
 @EqualsAndHashCode
 @ToString
-@Getter
 public class Configuration {
 
+	@Getter
 	@Id
 	@GeneratedValue
 	@Column(updatable = false)
 	private long ID;
 
 	@NonNull
+	@Getter
 	@Setter
 	@Column(unique = true)
 	private String folderPath;
 
 	@NonNull
+	@Getter
 	@Setter
-	private String scanInterval;
+	private String updateInterval;
 }

@@ -15,7 +15,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import lombok.Singular;
 import lombok.ToString;
 
 @RequiredArgsConstructor(access = AccessLevel.PUBLIC)
@@ -24,7 +23,6 @@ import lombok.ToString;
 @Table(name = "photo")
 @EqualsAndHashCode
 @ToString
-@Getter
 public class Photo {
 
 	@Id
@@ -33,14 +31,16 @@ public class Photo {
 	private long ID;
 
 	@NonNull
+	@Getter
 	private String filePath;
 
 	@NonNull
+	@Getter
 	@Column(unique = true)
 	private String hashValue;
 
 	@NonNull
+	@Getter
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
-	@Singular
 	private List<Label> labels;
 }
