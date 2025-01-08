@@ -12,14 +12,15 @@
     "editor.fontSize": 16,
     "editor.fontWeight": "bold",
     "editor.fontLigatures": true,
-    "editor.lineHeight": 1.5,    
+    "editor.lineHeight": 1.5,
+    "editor.minimap.autohide": true,
     "editor.mouseWheelZoom": true,
     "editor.smoothScrolling": true,
-    "editor.tabSize": 4,    
+    "editor.tabSize": 4,
     "workbench.colorTheme": "Default Dark+",
     "workbench.startupEditor": "none",
     "terminal.integrated.fontSize": 14,
     "terminal.integrated.cursorBlinking": true,
-
     "java.compile.nullAnalysis.mode": "automatic",
+    "java.configuration.updateBuildConfiguration": "interactive",
 }
