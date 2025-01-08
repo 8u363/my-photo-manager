@@ -33,9 +33,12 @@ public class ConfigurationService {
 	 * @return the saved configuration
 	 */
 	public Configuration saveConfiguration(@NonNull Configuration configuration) {
-		repository.findByFolderPathAndIndexInterval(
-				configuration.getFolderPath(), configuration.getUpdateInterval())
-				.ifPresent(config -> new InternalError(""));
+		log.info("save {}", kv("configuration", configuration));
+
+		var folderPath = configuration.getFolderPath();
+		var indexInterval = configuration.getIndexInterval();
+		repository.findByFolderPathAndIndexInterval(folderPath, indexInterval)
+				.ifPresent(config -> new InternalError("configuration [" + configuration + "] exists already"));
 
 		var savedConfiguration = repository.saveAndFlush(configuration);
 		log.info("saved {}", kv("configuration", savedConfiguration));
@@ -52,7 +55,10 @@ public class ConfigurationService {
 	 * @return the updated configuration
 	 */
 	public Configuration updateConfiguration(long ID, @NonNull String folderPath, @NonNull String indexInterval) {
-		// TODO update configuration
+		Configuration configuration = repository.findById(ID)
+				.orElseThrow(() -> new InternalError("no configuration found with ID " + ID));
+
+		log.info("update {}", kv("configuration", configuration));
 		return null;
 	}
 
@@ -62,7 +68,10 @@ public class ConfigurationService {
 	 * @param ID the existing configuration id
 	 */
 	public void deleteConfiguration(long ID) {
-		// TODO delete configuration
+		Configuration configuration = repository.findById(ID)
+				.orElseThrow(() -> new InternalError("no configuration found with ID " + ID));
+
+		log.info("delete {}", kv("configuration", configuration));
 
 	}
 }

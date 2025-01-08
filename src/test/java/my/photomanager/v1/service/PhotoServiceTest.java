@@ -1,4 +1,4 @@
-package my.photomanager.service.photo;
+package my.photomanager.v1.service;
 
 import static my.photomanager.TestConstants.INTEGRATION_TEST;
 import static my.photomanager.TestConstants.TEST_PHOPTOS_PATH;
@@ -11,9 +11,8 @@ import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
 import lombok.extern.log4j.Log4j2;
-import my.photomanager.repository.PhotoRepository;
-import my.photomanager.service.location.LocationService;
-import my.photomanager.service.metaData.MetaDataService;
+import my.photomanager.v1.repository.PhotoRepository;
+
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;

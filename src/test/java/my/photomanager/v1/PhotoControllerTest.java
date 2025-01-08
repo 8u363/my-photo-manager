@@ -1,4 +1,4 @@
-package my.photomanager.controller;
+package my.photomanager.v1;
 
 import static my.photomanager.TestConstants.INTEGRATION_TEST;
 import static org.mockito.ArgumentMatchers.anyInt;
@@ -8,6 +8,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import lombok.extern.log4j.Log4j2;
+import my.photomanager.controller.PhotoController;
 import my.photomanager.service.photo.PhotoService;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;

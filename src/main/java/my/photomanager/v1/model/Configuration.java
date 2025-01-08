@@ -36,5 +36,5 @@ public class Configuration {
 	@NonNull
 	@Getter
 	@Setter
-	private String updateInterval;
+	private String indexInterval;
 }

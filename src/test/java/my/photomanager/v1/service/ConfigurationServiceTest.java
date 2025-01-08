@@ -1,4 +1,4 @@
-package my.photomanager.service.configuration;
+package my.photomanager.v1.service;
 
 import static my.photomanager.TestConstants.INTEGRATION_TEST;
 
