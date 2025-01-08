@@ -20,8 +20,8 @@ import org.springframework.stereotype.Service;
 public class LocationService {
 
 	/**
-	 * build a location object
-	 * use open street map to get the detailed data of the longitude and latitude
+	 * call open street map url to get location detailed data
+	 * create a location object with these informations
 	 * 
 	 * @param longitude the longitude
 	 * @param latitude  the latitude

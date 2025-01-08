@@ -20,7 +20,7 @@ public class MetaDataService {
 
 	/**
 	 * read the meta data of the photo file
-	 * build a meta data object with these informations
+	 * create a meta data object with these informations
 	 * 
 	 * @param photoFile the photo file
 	 * @return the created meta data object

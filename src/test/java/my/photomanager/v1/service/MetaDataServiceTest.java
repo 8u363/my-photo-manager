@@ -3,6 +3,7 @@ package my.photomanager.v1.service;
 import static my.photomanager.TestConstants.TEST_FILE_PATH;
 import static my.photomanager.TestConstants.UNIT_TEST;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.nio.file.Path;
 import lombok.extern.log4j.Log4j2;
@@ -38,46 +39,38 @@ class MetaDataServiceTest {
 
 	@ParameterizedTest
 	@MethodSource("my.photomanager.TestConstants#getPhotoFilesWithMetaData")
-	void should_return_meta_data_object_from_photo_file(Path photoFilePath) {
+	void should_creat_meta_data_object_from_photo_file(Path photoFilePath) {
 		// when
-		var metaData = metaDataService.createMetaDataObjectOfPhotoFile(photoFilePath.toFile());
+		var createdMetaData = metaDataService.createMetaDataObjectOfPhotoFile(photoFilePath.toFile());
 
 		// then
-		assertThat(metaData).isNotNull();
-		assertThat(metaData.height()).isGreaterThan(0);
-		assertThat(metaData.width()).isGreaterThan(0);
-		assertThat(metaData.creationTimeStamp()).isEmpty();
-		assertThat(metaData.longitude()).isEqualTo(0);
-		assertThat(metaData.latitude()).isEqualTo(0);
+		assertThat(createdMetaData).isNotNull();
+		assertThat(createdMetaData.height()).isGreaterThan(0);
+		assertThat(createdMetaData.width()).isGreaterThan(0);
+		assertThat(createdMetaData.creationTimeStamp()).isEmpty();
+		assertThat(createdMetaData.longitude()).isEqualTo(0);
+		assertThat(createdMetaData.latitude()).isEqualTo(0);
 	}
 
 	@ParameterizedTest
 	@MethodSource("my.photomanager.TestConstants#getPhotoFilesWithoutMetaData")
 	void should_return_empty_meta_data_object_from_photo_file_without_meta_data(Path photoFilePath) {
 		// when
-		var metaData = metaDataService.createMetaDataObjectOfPhotoFile(photoFilePath.toFile());
+		var createdMetaData = metaDataService.createMetaDataObjectOfPhotoFile(photoFilePath.toFile());
 
 		// then
-		assertThat(metaData).isNotNull();
-		assertThat(metaData.height()).isGreaterThan(0);
-		assertThat(metaData.width()).isGreaterThan(0);
-		assertThat(metaData.creationTimeStamp()).isEmpty();
-		assertThat(metaData.longitude()).isEqualTo(0);
-		assertThat(metaData.latitude()).isEqualTo(0);
+		assertThat(createdMetaData).isNotNull();
+		assertThat(createdMetaData.height()).isGreaterThan(0);
+		assertThat(createdMetaData.width()).isGreaterThan(0);
+		assertThat(createdMetaData.creationTimeStamp()).isEmpty();
+		assertThat(createdMetaData.longitude()).isEqualTo(0);
+		assertThat(createdMetaData.latitude()).isEqualTo(0);
 	}
 
 	@Test
-	void should_return_empty_meta_data_from_non_photo_file() {
-		// when
-		var metaData = metaDataService.createMetaDataObjectOfPhotoFile(TEST_FILE_PATH.resolve("TextFile.txt")
-				.toFile());
-
-		// then
-		assertThat(metaData).isNotNull();
-		assertThat(metaData.height()).isEqualTo(0);
-		assertThat(metaData.width()).isEqualTo(0);
-		assertThat(metaData.creationTimeStamp()).isEmpty();
-		assertThat(metaData.longitude()).isEqualTo(0);
-		assertThat(metaData.latitude()).isEqualTo(0);
+	void should_throw_exception_when_create_meta_data_from_non_photo_file() {
+		assertThrows(IllegalArgumentException.class,
+				() -> metaDataService.createMetaDataObjectOfPhotoFile(TEST_FILE_PATH.resolve("TextFile.txt")
+						.toFile()));
 	}
 }

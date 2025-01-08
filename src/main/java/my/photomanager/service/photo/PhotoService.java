@@ -72,7 +72,6 @@ public class PhotoService implements IPhotoService<Photo> {
 		return repository.findByLabelNames(labelNames, pageRequest);
 	}
 
-	@Override
 	public List<Label> getLabels() {
 		return repository.findAll()
 				.stream()
@@ -84,7 +83,8 @@ public class PhotoService implements IPhotoService<Photo> {
 
 	private Photo buildPhoto(@NonNull File photoFile) throws IOException {
 		var metaData = metaDataService.readMetaDataFromPhotoFile(photoFile);
-		var location = locationService.buildLocationFromLongitudeAndLatitude(metaData.getLongitude(), metaData.getLatitude());
+		var location = locationService.buildLocationFromLongitudeAndLatitude(metaData.getLongitude(),
+				metaData.getLatitude());
 
 		List labels = Lists.newArrayList(getLabelsFromMetaData(metaData), getLabelsFromLocation(location));
 		var photo = new Photo(photoFile.getAbsolutePath(), getHashValue(photoFile), labels);
@@ -101,7 +101,8 @@ public class PhotoService implements IPhotoService<Photo> {
 	}
 
 	private List<Label> getLabelsFromLocation(@NonNull Location location) {
-		var additionalContent = location.getCountry() + " " + location.getCity() + " " + location.getPostalCode() + " " + location.getStreet();
+		var additionalContent = location.getCountry() + " " + location.getCity() + " " + location.getPostalCode() + " "
+				+ location.getStreet();
 		var countryTag = Label.builder(location.getCountry(), LabelCategory.LOCATION)
 				.withAdditionalContent(additionalContent)
 				.build();
@@ -119,5 +120,17 @@ public class PhotoService implements IPhotoService<Photo> {
 				.build();
 
 		return Lists.newArrayList(dimensionWidthTag, dimensionHeightTag);
+	}
+
+	@Override
+	public Photo updatePhoto(long ID, List<? extends ILabel> labels) {
+		// TODO Auto-generated method stub
+		throw new UnsupportedOperationException("Unimplemented method 'updatePhoto'");
+	}
+
+	@Override
+	public void deletePhoto(long ID) {
+		// TODO Auto-generated method stub
+		throw new UnsupportedOperationException("Unimplemented method 'deletePhoto'");
 	}
 }

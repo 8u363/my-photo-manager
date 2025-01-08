@@ -17,6 +17,8 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
 
@@ -31,7 +33,27 @@ public class PhotoService {
 	private final MetaDataService metaDataService;
 	private final LocationService locationService;
 
-	public Photo createPhotoObjectOfPhotoFile(File photoFile) throws IOException {
+	public Page<Photo> getPhotos(int page, int size) {
+		return repository.findAll(PageRequest.of(page, size));
+	}
+
+	public Page<Photo> getPhotos(int page, int size, List<String> labelNames) {
+		if (labelNames.isEmpty()) {
+			return getPhotos(page, size);
+		}
+
+		return repository.findByLabelNames(labelNames, PageRequest.of(page, size));
+	}
+
+	/**
+	 * create the location and meta data object of the photo file
+	 * create a photo object with these datas
+	 * 
+	 * @param photoFile the photo file
+	 * @return the created photo object
+	 * @throws IOException
+	 */
+	public Photo createPhotoObjectOfPhotoFile(@NonNull File photoFile) throws IOException {
 		log.debug("create photo object of {}, {}", kv("photoFile", photoFile));
 
 		String hashValue = DigestUtils.md5DigestAsHex(new FileInputStream(photoFile));

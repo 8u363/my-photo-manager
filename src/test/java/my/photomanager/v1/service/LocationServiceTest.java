@@ -2,6 +2,7 @@ package my.photomanager.v1.service;
 
 import static my.photomanager.TestConstants.UNIT_TEST;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.io.IOException;
 
@@ -37,31 +38,23 @@ class LocationServiceTest {
 
 	@ParameterizedTest
 	@CsvSource({ "48.86, 2.35", "45.24, -73.56", "-33.87, 151.21", "-22.90, -43.17" })
-	void should_return_location_object_from_latitude_and_longitude(double latitude, double longitude)
+	void should_create_location_object_from_latitude_and_longitude(double latitude, double longitude)
 			throws IOException {
 		// when
-		var location = locationService.createLocationObjectLocationOfLongitudeAndLatitude(longitude, latitude);
+		var createdLocation = locationService.createLocationObjectLocationOfLongitudeAndLatitude(longitude, latitude);
 
 		// then
-		assertThat(location).isNotNull();
-		assertThat(location.country()).isNotEmpty();
-		assertThat(location.city()).isNotEmpty();
-		assertThat(location.street()).isNotEmpty();
+		assertThat(createdLocation).isNotNull();
+		assertThat(createdLocation.country()).isNotEmpty();
+		assertThat(createdLocation.city()).isNotEmpty();
+		assertThat(createdLocation.street()).isNotEmpty();
 	}
 
 	@ParameterizedTest
 	@CsvSource({ "91, 0", "-91, 0", "0, 181", "0, -181" })
-	void should_return_empty_location_object_from_latitude_and_longitude(double latitude, double longitude)
-			throws IOException {
-		// when
-		var location = locationService.createLocationObjectLocationOfLongitudeAndLatitude(longitude, latitude);
-
-		// then
-		assertThat(location).isNotNull();
-		assertThat(location.country()).isEmpty();
-		assertThat(location.city()).isEmpty();
-		assertThat(location.postalCode()).isEmpty();
-		assertThat(location.street()).isEmpty();
-		assertThat(location.houseNumber()).isEmpty();
+	void should_throw_exception_when_create_location_from_invalid_latitude_and_longitude(double latitude,
+			double longitude) {
+		assertThrows(IllegalArgumentException.class, () -> locationService
+				.createLocationObjectLocationOfLongitudeAndLatitude(longitude, latitude));
 	}
 }

@@ -26,6 +26,7 @@ public class Photo {
 
 	@Id
 	@GeneratedValue
+	@Getter
 	@Column(updatable = false)
 	private long ID;
 
