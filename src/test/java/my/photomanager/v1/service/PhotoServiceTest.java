@@ -25,7 +25,6 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-
 @SpringBootTest
 @Tag(INTEGRATION_TEST)
 @Log4j2
@@ -51,7 +50,7 @@ class PhotoServiceTest {
 
 	@BeforeEach
 	void setup() {
-		photoService = new PhotoService(repository, metaDataService, locationService);
+		photoService = new PhotoService(repository);
 	}
 
 	@AfterEach
@@ -76,10 +75,12 @@ class PhotoServiceTest {
 	@Test
 	void should_return_existing_photo_when_try_to_save_again() {
 		// when
-		var firstPhoto = photoService.savePhoto(TEST_PHOPTOS_PATH.resolve(Path.of("withMetaData", "Brandenburg_Gate_with_metadata.jpg"))
-				.toFile());
-		var secondPhoto = photoService.savePhoto(TEST_PHOPTOS_PATH.resolve(Path.of("withMetaData", "Brandenburg_Gate_with_metadata.jpg"))
-				.toFile());
+		var firstPhoto = photoService
+				.savePhoto(TEST_PHOPTOS_PATH.resolve(Path.of("withMetaData", "Brandenburg_Gate_with_metadata.jpg"))
+						.toFile());
+		var secondPhoto = photoService
+				.savePhoto(TEST_PHOPTOS_PATH.resolve(Path.of("withMetaData", "Brandenburg_Gate_with_metadata.jpg"))
+						.toFile());
 
 		// then
 		assertThat(firstPhoto).isNotNull();
@@ -127,9 +128,8 @@ class PhotoServiceTest {
 				.size()).isEqualTo(1);
 	}
 
-
 	@ParameterizedTest
-	@CsvSource({"1024, 4", "768, 1"})
+	@CsvSource({ "1024, 4", "768, 1" })
 	void test_get_photos_by_page_filtered_by_labels(String labels, int expectedPageContentSize) {
 		// given
 		photoService.savePhoto(TEST_PHOTO_LONDON.toFile());
@@ -180,6 +180,6 @@ class PhotoServiceTest {
 		// then
 		assertThat(labels).isNotNull();
 		assertThat(labels.size()).isNotZero();
-		//TODO check content of labels
+		// TODO check content of labels
 	}
 }

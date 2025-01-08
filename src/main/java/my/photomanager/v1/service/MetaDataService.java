@@ -25,8 +25,8 @@ public class MetaDataService {
 	 * @param photoFile the photo file
 	 * @return the created meta data object
 	 */
-	public MetaData getMetaDataOfPhotoFile(@NonNull File photoFile) {
-		log.debug("get meta data of {}", kv("photoFilePath", photoFile));
+	protected MetaData createMetaDataObjectOfPhotoFile(@NonNull File photoFile) {
+		log.debug("create meta data object of {}", kv("photoFilePath", photoFile));
 
 		var photoHeight = getPhotoHeight(photoFile);
 		var photoWidth = getPhotoWidth(photoFile);
@@ -35,7 +35,7 @@ public class MetaDataService {
 		var latitude = readLatitudeFromPhotoMetaData(photoFile);
 
 		var metaData = new MetaData(photoWidth, photoHeight, photoCreationTimeStamp, longitude, latitude);
-		log.info("{}", kv("meta data", metaData));
+		log.info("created {}", kv("meta data object", metaData));
 
 		return metaData;
 	}
@@ -98,8 +98,8 @@ public class MetaDataService {
 					}
 				}
 			}
-		} catch (IllegalArgumentException | IOException ignored) {
-			// ignore the exception and return a longitude of 0
+		} catch (IllegalArgumentException | IOException e) {
+			log.warn("an exception occurred {}. will return 0 as longitude", e.getMessage());
 		}
 
 		return longitude;
@@ -119,14 +119,14 @@ public class MetaDataService {
 					}
 				}
 			}
-		} catch (IllegalArgumentException | IOException ignored) {
-			// ignore the exception and return a latitude of 0
+		} catch (IllegalArgumentException | IOException e) {
+			log.warn("an exception occurred {}. will return 0 as latitude", e.getMessage());
 		}
 
 		return latitude;
 	}
 
-	private record MetaData(int width, int height, @NonNull String creationTimeStamp, double longitude,
+	protected record MetaData(int width, int height, @NonNull String creationTimeStamp, double longitude,
 			double latitude) {
 
 	}

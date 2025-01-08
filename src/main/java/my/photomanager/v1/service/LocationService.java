@@ -5,6 +5,7 @@ import static net.logstash.logback.argument.StructuredArguments.kv;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -27,8 +28,9 @@ public class LocationService {
 	 * @return the created location object
 	 * @throws IOException
 	 */
-	public Location getLocationOfLongitudeAndLatitude(double longitude, double latitude) throws IOException {
-		log.info("get location of {}, {}", kv("longitude", longitude), kv("latitude", latitude));
+	protected Location createLocationObjectLocationOfLongitudeAndLatitude(double longitude, double latitude)
+			throws IOException {
+		log.info("create location object of {}, {}", kv("longitude", longitude), kv("latitude", latitude));
 
 		var openStreetMapURL = "https://nominatim.openstreetmap.org/reverse.php?lat=" + latitude + "&lon=" + longitude
 				+ "&format=jsonv2";
@@ -57,12 +59,12 @@ public class LocationService {
 		}
 
 		var location = new Location(country, city, postcode, street, houseNumber);
-		log.info("{}", kv("location", location));
+		log.info("created {}", kv("location object", location));
 
 		return location;
 	}
 
-	private record Location(@NonNull String country, @NonNull String city, @NonNull String postalCode,
+	protected record Location(@NonNull String country, @NonNull String city, @NonNull String postalCode,
 			@NonNull String street, @NonNull String houseNumber) {
 
 	}

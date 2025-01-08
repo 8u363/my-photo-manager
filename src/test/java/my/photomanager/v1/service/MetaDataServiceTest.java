@@ -40,44 +40,44 @@ class MetaDataServiceTest {
 	@MethodSource("my.photomanager.TestConstants#getPhotoFilesWithMetaData")
 	void should_return_meta_data_object_from_photo_file(Path photoFilePath) {
 		// when
-		var metaData = metaDataService.getMetaDataOfPhotoFile(photoFilePath.toFile());
+		var metaData = metaDataService.createMetaDataObjectOfPhotoFile(photoFilePath.toFile());
 
 		// then
 		assertThat(metaData).isNotNull();
-		assertThat(metaData.getHeight()).isGreaterThan(0);
-		assertThat(metaData.getWidth()).isGreaterThan(0);
-		assertThat(metaData.getCreationTimeStamp()).isEmpty();
-		assertThat(metaData.getLongitude()).isEqualTo(0);
-		assertThat(metaData.getLatitude()).isEqualTo(0);
+		assertThat(metaData.height()).isGreaterThan(0);
+		assertThat(metaData.width()).isGreaterThan(0);
+		assertThat(metaData.creationTimeStamp()).isEmpty();
+		assertThat(metaData.longitude()).isEqualTo(0);
+		assertThat(metaData.latitude()).isEqualTo(0);
 	}
 
 	@ParameterizedTest
 	@MethodSource("my.photomanager.TestConstants#getPhotoFilesWithoutMetaData")
 	void should_return_empty_meta_data_object_from_photo_file_without_meta_data(Path photoFilePath) {
 		// when
-		var metaData = metaDataService.readMetaDataFromPhotoFile(photoFilePath.toFile());
+		var metaData = metaDataService.createMetaDataObjectOfPhotoFile(photoFilePath.toFile());
 
 		// then
 		assertThat(metaData).isNotNull();
-		assertThat(metaData.getHeight()).isGreaterThan(0);
-		assertThat(metaData.getWidth()).isGreaterThan(0);
-		assertThat(metaData.getCreationTimeStamp()).isEmpty();
-		assertThat(metaData.getLongitude()).isEqualTo(0);
-		assertThat(metaData.getLatitude()).isEqualTo(0);
+		assertThat(metaData.height()).isGreaterThan(0);
+		assertThat(metaData.width()).isGreaterThan(0);
+		assertThat(metaData.creationTimeStamp()).isEmpty();
+		assertThat(metaData.longitude()).isEqualTo(0);
+		assertThat(metaData.latitude()).isEqualTo(0);
 	}
 
 	@Test
 	void should_return_empty_meta_data_from_non_photo_file() {
 		// when
-		var metaData = metaDataService.getMetaDataOfPhotoFile(TEST_FILE_PATH.resolve("TextFile.txt")
+		var metaData = metaDataService.createMetaDataObjectOfPhotoFile(TEST_FILE_PATH.resolve("TextFile.txt")
 				.toFile());
 
 		// then
 		assertThat(metaData).isNotNull();
-		assertThat(metaData.getHeight()).isEqualTo(0);
-		assertThat(metaData.getWidth()).isEqualTo(0);
-		assertThat(metaData.getCreationTimeStamp()).isEmpty();
-		assertThat(metaData.getLongitude()).isEqualTo(0);
-		assertThat(metaData.getLatitude()).isEqualTo(0);
+		assertThat(metaData.height()).isEqualTo(0);
+		assertThat(metaData.width()).isEqualTo(0);
+		assertThat(metaData.creationTimeStamp()).isEmpty();
+		assertThat(metaData.longitude()).isEqualTo(0);
+		assertThat(metaData.latitude()).isEqualTo(0);
 	}
 }
