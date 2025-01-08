@@ -15,7 +15,7 @@
     "editor.lineHeight": 1.5,    
     "editor.mouseWheelZoom": true,
     "editor.smoothScrolling": true,
-    "editor.tabSize": 8,    
+    "editor.tabSize": 4,    
     "workbench.colorTheme": "Default Dark+",
     "workbench.startupEditor": "none",
     "terminal.integrated.fontSize": 14,
