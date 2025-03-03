@@ -12,5 +12,5 @@
     </root>
     
     <logger name="ch.qos.logback" level="warn" />
-    <logger name="my.photomanager" level="debug"/>
+    <logger name="my.photomanager" level="info"/>
 </configuration>

@@ -6,31 +6,74 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
 import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
-import lombok.ToString;
+import lombok.Setter;
 
-@RequiredArgsConstructor(access = AccessLevel.PUBLIC)
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Builder(setterPrefix = "with")
+@AllArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Table(name = "PHOTO")
-@EqualsAndHashCode
-@ToString
 public class Photo {
 
+    // required parameter
     @Id
-	@GeneratedValue
-	@Column(updatable = false)
-	private long ID;
+    @GeneratedValue
+    @Column(updatable = false)
+    @Getter
+    private long id;
 
     @NonNull
-    @Column(updatable = false)
-    private String photoHashValue;
+    @Getter
+    private final String filePath;
 
     @NonNull
-    @Column(updatable = false)
-    private  String photoFilePath;
-    
+    @Column(unique = true)
+    @Getter
+    private final String hashValue;
+
+    // meta data parameter
+    @Getter
+    @Builder.Default
+    private final int width = 0;
+
+    @Getter
+    @Builder.Default
+    private final int height = 0;
+
+    @NonNull
+    @Getter
+    @Builder.Default
+    private final String creationTimeStamp = "";
+
+    // optional gps parameter
+    @NonNull
+    @Getter
+    @Setter
+    @Builder.Default
+    private String country = "";
+
+    @NonNull
+    @Getter
+    @Setter
+    @Builder.Default
+    private String city = "";
+
+    @NonNull
+    @Getter
+    @Setter
+    @Builder.Default
+    private String postalCode = "";
+
+    @NonNull
+    @Getter
+    @Setter
+    @Builder.Default
+    private String road = "";
+
+    public static PhotoBuilder builder(@NonNull String filePath, @NonNull String hashValue) {
+        return new Photo.PhotoBuilder().withFilePath(filePath).withHashValue(hashValue);
+    }
 }
