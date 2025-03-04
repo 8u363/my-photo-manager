@@ -110,7 +110,7 @@ jacocoTestCoverageVerification {
 }
 
 bootBuildImage{
-	imageName = "8u3631984/my-photomanager:${version}"
+	imageName = "8u363/my-photomanager:${version}"
 	publish = true
 	docker {
 		publishRegistry{
