@@ -110,12 +110,12 @@ jacocoTestCoverageVerification {
 }
 
 bootBuildImage{
-	imageName = "8u3631984/my-photomanager:${version}"
+	imageName = "8u363/my-photomanager:${version}"
 	publish = true
 	docker {
 		publishRegistry{
-			username = "8u3631984"
-			password = "dckr_pat_qW6T79oEmaXCqcWcJMFF1nMM0wk"
+			username = "8u363"
+			password = System.getenv("DOCKER_HUB_KEY")
 		}
 	}
 }
