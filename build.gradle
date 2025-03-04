@@ -115,7 +115,7 @@ bootBuildImage{
 	docker {
 		publishRegistry{
 			username = "8u363"
-			password = "${{ DOCKER_HUB_KEY }}"
+			password = "${{ secret.DOCKER_HUB_KEY }}"
 		}
 	}
 }
