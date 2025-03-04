@@ -25,45 +25,43 @@ repositories {
 }
 
 dependencies {
+	// spring dependencies
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
+	developmentOnly 'org.springframework.boot:spring-boot-devtools'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'	
 
-	implementation 'net.logstash.logback:logstash-logback-encoder:7.4'
-	implementation 'org.json:json:20231013'
-	implementation 'commons-io:commons-io:2.15.1'
+	// junit dependencies
+	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 
+	// lombok
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
 	testCompileOnly 'org.projectlombok:lombok'
 	testAnnotationProcessor 'org.projectlombok:lombok'
+
+	// logstash dependencies
+	implementation 'net.logstash.logback:logstash-logback-encoder:7.4'
+
+	// json dependencies
+	implementation 'org.json:json:20231013'
+
+	// commons-io dependencies
+	implementation 'commons-io:commons-io:2.15.1'
+
+	// guava dependencies
 	implementation 'com.google.guava:guava:32.0.0-android'
+
+	// imaging dependencies
 	implementation 'org.apache.commons:commons-imaging:1.0.0-alpha5'
-	developmentOnly 'org.springframework.boot:spring-boot-devtools'
+
+	//database dependencies
 	runtimeOnly 'com.h2database:h2'
-	annotationProcessor 'org.projectlombok:lombok'
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
-tasks.register('runUnitTests', Test) {
-	useJUnitPlatform {
-		includeTags("UNIT-TEST")
-		excludeTags("INTEGRATION-TEST")
-	}
-}
-
-tasks.register('runIntegrationTests', Test) {
-	useJUnitPlatform {
-		includeTags("INTEGRATION-TEST")
-		excludeTags("UNIT-TEST")
-	}
-}
-
-tasks.register('runAllTests', Test) {
-	useJUnitPlatform {
-		includeTags("INTEGRATION-TEST", "UNIT-TEST")
-	}
+tasks.named('test') {
+  	useJUnitPlatform()
 
 	finalizedBy jacocoTestReport
 }
@@ -73,7 +71,7 @@ jacoco {
 }
 
 jacocoTestReport {
-	dependsOn runAllTests
+	dependsOn test
 
 	reports {
 		xml.required = true
@@ -82,6 +80,8 @@ jacocoTestReport {
 }
 
 jacocoTestCoverageVerification {
+	dependsOn test
+
 	violationRules {
 		rule {
 			element = 'CLASS'
@@ -89,12 +89,33 @@ jacocoTestCoverageVerification {
 				counter = 'CLASS'
 				value = 'COVEREDRATIO'
 				minimum = 1.0
+				excludes = [
+					"my.photomanager.MyPhotoManager",
+					"my.photomanager.PhotoManagerException",
+					"my.photomanager.web.PhotoDTO"
+					]
 			}
 			limit {
 				counter = 'LINE'
 				value = 'COVEREDRATIO'
-				minimum = 0.85
+				minimum = 0.90
+				excludes = [
+					"my.photomanager.MyPhotoManager",
+					"my.photomanager.PhotoManagerException",
+					"my.photomanager.web.PhotoDTO"
+					]
 			}
+		}
+	}
+}
+
+bootBuildImage{
+	imageName = "8u3631984/my-photomanager:${version}"
+	publish = true
+	docker {
+		publishRegistry{
+			username = "8u3631984"
+			password = "dckr_pat_qW6T79oEmaXCqcWcJMFF1nMM0wk"
 		}
 	}
 }
