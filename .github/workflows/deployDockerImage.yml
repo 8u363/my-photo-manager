@@ -1,8 +1,9 @@
 name: deploy docker image
 
-on: [push]
+on:
+  [push]
   # push:
-    # branches: [main]
+  # branches: [main]
 
 jobs:
   test:
@@ -14,12 +15,14 @@ jobs:
       - name: Set up JDK 17
         uses: actions/setup-java@v2
         with:
-          java-version: '17'
-          distribution: 'adopt'
-          cache: 'gradle'
+          java-version: "17"
+          distribution: "adopt"
+          cache: "gradle"
 
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
       - name: Run all tests and check test coverage
+        env:
+          DOCKER_HUB_KEY: ${{ secrets.DOCKER_HUB_KEY }}
         run: ./gradlew bootBuildImage
