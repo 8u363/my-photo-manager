@@ -4,3 +4,8 @@ server:
 spring:
   application:
     name: my-photo-manager
+
+photomanager:
+  thumbnail:
+    folder: thumbnails
+    width: 150
