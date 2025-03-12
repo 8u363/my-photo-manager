@@ -27,10 +27,13 @@ class PhotoServiceTest {
     @Mock
     private PhotoRepository repository;
 
+    @Mock
+    private ThumbnailService thumbnailService;
+
 
     @BeforeEach
     void setup() {
-        photoService = new PhotoService(repository);
+        photoService = new PhotoService(repository, thumbnailService);
     }
 
     @Test
