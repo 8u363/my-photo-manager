@@ -1,5 +1,5 @@
 package my.photomanager.web;
 
-public record PhotoDTO() {
+public record PhotoDTO(long id, String photoData) {
 
 }
