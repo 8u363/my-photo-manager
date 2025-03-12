@@ -11,6 +11,7 @@ import org.apache.logging.log4j.util.Strings;
 import org.springframework.stereotype.Service;
 import lombok.NonNull;
 import lombok.extern.log4j.Log4j2;
+import my.photomanager.configuration.PhotoManagerConfiguration;
 import my.photomanager.photo.Photo;
 import net.coobird.thumbnailator.Thumbnails;
 
@@ -18,7 +19,11 @@ import net.coobird.thumbnailator.Thumbnails;
 @Log4j2
 public class ThumbnailService {
 
-    private static final String THUMBNAIL_DIR = "thumbnails";
+    private final PhotoManagerConfiguration configuration;
+
+    protected ThumbnailService(@NonNull PhotoManagerConfiguration configuration) {
+        this.configuration = configuration;
+    }
 
     public String getThumbnailBase64OfPhoto(@NonNull Photo photo) {
         var thumbnailBase64 = Strings.EMPTY;
@@ -36,16 +41,18 @@ public class ThumbnailService {
     }
 
     private void createThumbnailDirectoryIfNotexists() throws IOException {
-        FileUtils.forceMkdir(new File(THUMBNAIL_DIR));
+        FileUtils.forceMkdir(new File(configuration.getThumbnailFolder()));
     }
 
     private File getCachedThumbnailOrCreateNew(@NonNull Photo photo) throws IOException {
-        var thumbnailPath = Path.of(THUMBNAIL_DIR, photo.getHashValue() + ".jpg");
+        var thumbnailPath =
+                Path.of(configuration.getThumbnailFolder(), photo.getHashValue() + ".jpg");
         File thumbnailFile = thumbnailPath.toFile();
 
         if (!Files.exists(thumbnailPath)) {
             log.info("create {}", kv("thumbnail", thumbnailFile.getAbsolutePath()));
-            Thumbnails.of(new File(photo.getFilePath())).width(150).toFile(thumbnailFile);
+            Thumbnails.of(new File(photo.getFilePath())).width(configuration.getThumbnailWidth())
+                    .toFile(thumbnailFile);
         }
 
         return thumbnailFile;
