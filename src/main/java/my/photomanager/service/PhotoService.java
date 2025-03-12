@@ -1,7 +1,12 @@
 package my.photomanager.service;
 
 import static net.logstash.logback.argument.StructuredArguments.kv;
+import java.io.File;
+import java.io.IOException;
+import java.util.Base64;
 import java.util.List;
+import org.apache.commons.io.FileUtils;
+import org.apache.logging.log4j.util.Strings;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import lombok.NonNull;
@@ -9,19 +14,26 @@ import lombok.extern.log4j.Log4j2;
 import my.photomanager.photo.Photo;
 import my.photomanager.repository.PhotoRepository;
 import my.photomanager.web.PhotoDTO;
+import net.coobird.thumbnailator.Thumbnails;
 
 @Service
 @Log4j2
 public class PhotoService {
 
     private final PhotoRepository repository;
+    private final ThumbnailService thumbnailService;
 
-    protected PhotoService(@NonNull PhotoRepository repository) {
+    protected PhotoService(@NonNull PhotoRepository repository,
+            @NonNull ThumbnailService thumbnailService) {
         this.repository = repository;
+        this.thumbnailService = thumbnailService;
     }
 
+
     public List<PhotoDTO> getPhotos(int page, int size) {
-        return repository.findAll(PageRequest.of(page, size)).stream().map(photo -> new PhotoDTO())
+        return repository.findAll(PageRequest.of(page, size)).stream()
+                .map(photo -> new PhotoDTO(photo.getId(),
+                        thumbnailService.getThumbnailBase64OfPhoto(photo)))
                 .toList();
     }
 

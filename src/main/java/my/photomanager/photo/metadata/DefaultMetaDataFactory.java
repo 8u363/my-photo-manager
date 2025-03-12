@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.util.Optional;
 import org.apache.commons.imaging.ImageInfo;
 import org.apache.commons.imaging.Imaging;
-import org.apache.commons.imaging.ImagingException;
 import org.apache.commons.imaging.formats.jpeg.JpegImageMetadata;
 import org.apache.commons.imaging.formats.tiff.TiffImageMetadata;
 import org.apache.commons.imaging.formats.tiff.TiffImageMetadata.GpsInfo;
@@ -137,6 +136,7 @@ public class DefaultMetaDataFactory implements IMetaDataFactory {
             throws IOException {
         try {
             WebPImageMetadata imageMetaData = (WebPImageMetadata) Imaging.getMetadata(photoFile);
+
             if (imageMetaData != null) {
                 return Optional.ofNullable(imageMetaData.getExif());
             }

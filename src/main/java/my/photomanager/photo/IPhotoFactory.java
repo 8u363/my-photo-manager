@@ -6,7 +6,6 @@ import java.io.IOException;
 import org.springframework.util.DigestUtils;
 import lombok.NonNull;
 
-
 public interface IPhotoFactory {
 
     Photo createPhoto(File photoFile) throws IOException;
