@@ -3,8 +3,6 @@ package my.photomanager.filter.locationFilter;
 import static net.logstash.logback.argument.StructuredArguments.kv;
 import java.util.function.Predicate;
 import org.apache.logging.log4j.util.Strings;
-import org.hibernate.event.spi.PreDeleteEvent;
-import org.hibernate.event.spi.PreInsertEvent;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.NonNull;
