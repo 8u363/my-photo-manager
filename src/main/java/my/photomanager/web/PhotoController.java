@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import lombok.NonNull;
+import my.photomanager.filter.FilterService;
 import my.photomanager.photo.DefaultPhotoFactory;
 import my.photomanager.photo.Photo;
 import my.photomanager.service.PhotoService;
@@ -20,11 +21,13 @@ public class PhotoController {
 
     private final PhotoService photoService;
     private final DefaultPhotoFactory photoFactory;
+    private final FilterService filterService;
 
     protected PhotoController(@NonNull PhotoService photoService,
-            @NonNull DefaultPhotoFactory photoFactory) {
+            @NonNull DefaultPhotoFactory photoFactory, @NonNull FilterService filterService) {
         this.photoService = photoService;
         this.photoFactory = photoFactory;
+        this.filterService = filterService;
     }
 
     @GetMapping(value = "/photos")
@@ -39,7 +42,9 @@ public class PhotoController {
             throws IOException {
         var photo = photoFactory.createPhoto(new File(filePath));
 
-        return photoService.savePhoto(photo);
+        var savedPhoto = photoService.savePhoto(photo);
+        filterService.updateFilterOptions(savedPhoto);
+        return savedPhoto;
     }
 
     @DeleteMapping("/delete")
