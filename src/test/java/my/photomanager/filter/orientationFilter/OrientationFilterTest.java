@@ -10,55 +10,53 @@ import my.photomanager.photo.Photo;
 
 class OrientationFilterTest {
 
+        @Test
+        void shouldActivateFilter() {
+                var orienationFilter = OrientationFilter.builder()
+                                .withOrientation(Orientation.LANDSCAPE).build();
 
+                assertThat(orienationFilter.isActive()).isFalse();
+                orienationFilter.setActive();
+                assertThat(orienationFilter.isActive()).isTrue();
+        }
 
-    @Test
-    void shouldActivateFilter() {
-        var orienationFilter =
-                OrientationFilter.builder().withOrientation(Orientation.LANDSCAPE).build();
+        @Test
+        void shouldDeactivateFilter() {
+                var orienationFilter = OrientationFilter.builder()
+                                .withOrientation(Orientation.LANDSCAPE).build();
 
-        assertThat(orienationFilter.isActive()).isFalse();
-        orienationFilter.setActive();
-        assertThat(orienationFilter.isActive()).isTrue();
-    }
+                assertThat(orienationFilter.isActive()).isFalse();
+                orienationFilter.setInActive();
+                assertThat(orienationFilter.isActive()).isFalse();
+        }
 
-    @Test
-    void shouldDeactivateFilter() {
-        var orienationFilter =
-                OrientationFilter.builder().withOrientation(Orientation.LANDSCAPE).build();
+        static Stream<Arguments> getFilterData() {
+                var PHOTO_HASH_VALUE = "1234567890";
+                var PHOTO_FILE_PATH = "testPhoto.jpg";
+                var landscapePhoto = Photo.builder(PHOTO_FILE_PATH, PHOTO_HASH_VALUE)
+                                .withWidth(1024).withHeight(768).build();
+                var portraitPhoto = Photo.builder(PHOTO_FILE_PATH, PHOTO_HASH_VALUE).withWidth(768)
+                                .withHeight(1024).build();
+                var squarePhoto = Photo.builder(PHOTO_FILE_PATH, PHOTO_HASH_VALUE).withWidth(768)
+                                .withHeight(768).build();
 
-        assertThat(orienationFilter.isActive()).isFalse();
-        orienationFilter.setInActive();
-        assertThat(orienationFilter.isActive()).isFalse();
-    }
+                return Stream.of(Arguments.of(landscapePhoto, Orientation.LANDSCAPE, true),
+                                Arguments.of(landscapePhoto, Orientation.PORTRAIT, false),
+                                Arguments.of(landscapePhoto, Orientation.SQUARE, false),
+                                Arguments.of(portraitPhoto, Orientation.LANDSCAPE, false),
+                                Arguments.of(portraitPhoto, Orientation.PORTRAIT, true),
+                                Arguments.of(portraitPhoto, Orientation.SQUARE, false),
+                                Arguments.of(squarePhoto, Orientation.LANDSCAPE, false),
+                                Arguments.of(squarePhoto, Orientation.PORTRAIT, false),
+                                Arguments.of(squarePhoto, Orientation.SQUARE, true));
+        }
 
-    static Stream<Arguments> getFilterData() {
-        var PHOTO_HASH_VALUE = "1234567890";
-        var PHOTO_FILE_PATH = "testPhoto.jpg";
-        var landscapePhoto = Photo.builder(PHOTO_FILE_PATH, PHOTO_HASH_VALUE).withWidth(1024)
-                .withHeight(768).build();
-        var portraitPhoto = Photo.builder(PHOTO_FILE_PATH, PHOTO_HASH_VALUE).withWidth(768)
-                .withHeight(1024).build();
-        var squarePhoto = Photo.builder(PHOTO_FILE_PATH, PHOTO_HASH_VALUE).withWidth(768)
-                .withHeight(768).build();
+        @ParameterizedTest
+        @MethodSource("getFilterData")
+        void shouldTestPhotos(Photo photo, Orientation filterOrientation, boolean expectedTest) {
+                var orienationFilter = OrientationFilter.builder()
+                                .withOrientation(filterOrientation).build();
 
-        return Stream.of(Arguments.of(landscapePhoto, Orientation.LANDSCAPE, true),
-                Arguments.of(landscapePhoto, Orientation.PORTRAIT, false),
-                Arguments.of(landscapePhoto, Orientation.SQUARE, false),
-                Arguments.of(portraitPhoto, Orientation.LANDSCAPE, false),
-                Arguments.of(portraitPhoto, Orientation.PORTRAIT, true),
-                Arguments.of(portraitPhoto, Orientation.SQUARE, false),
-                Arguments.of(squarePhoto, Orientation.LANDSCAPE, false),
-                Arguments.of(squarePhoto, Orientation.PORTRAIT, false),
-                Arguments.of(squarePhoto, Orientation.SQUARE, true));
-    }
-
-    @ParameterizedTest
-    @MethodSource("getFilterData")
-    void shouldTestPhotos(Photo photo, Orientation filterOrientation, boolean expectedTest) {
-        var orienationFilter =
-                OrientationFilter.builder().withOrientation(filterOrientation).build();
-
-        assertThat(orienationFilter.test(photo)).isEqualTo(expectedTest);
-    }
+                assertThat(orienationFilter.test(photo)).isEqualTo(expectedTest);
+        }
 }

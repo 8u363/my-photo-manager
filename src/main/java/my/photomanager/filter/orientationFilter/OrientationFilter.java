@@ -1,5 +1,6 @@
 package my.photomanager.filter.orientationFilter;
 
+import java.util.function.Predicate;
 import lombok.Builder;
 import lombok.NonNull;
 import my.photomanager.filter.IFilter;
@@ -16,8 +17,24 @@ public class OrientationFilter implements IFilter {
 
     @Override
     public boolean test(@NonNull Photo photo) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'test'");
+        Predicate<Photo> isLandscape =
+                filteredPhoto -> filteredPhoto.getWidth() > filteredPhoto.getHeight();
+        Predicate<Photo> isPortrait =
+                filteredPhoto -> filteredPhoto.getHeight() > filteredPhoto.getWidth();
+
+        Predicate<Photo> isSquare =
+                filteredPhoto -> filteredPhoto.getHeight() == filteredPhoto.getWidth();
+
+        switch (orientation) {
+            case LANDSCAPE:
+                return isLandscape.test(photo);
+            case PORTRAIT:
+                return isPortrait.test(photo);
+            case SQUARE:
+                return isSquare.test(photo);
+            default:
+                return false;
+        }
     }
 
     @Override

@@ -1,16 +1,22 @@
 package my.photomanager.filter.locationFilter;
 
+import static net.logstash.logback.argument.StructuredArguments.kv;
+import java.util.function.Predicate;
 import org.apache.logging.log4j.util.Strings;
+import org.hibernate.event.spi.PreDeleteEvent;
+import org.hibernate.event.spi.PreInsertEvent;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.NonNull;
 import lombok.ToString;
+import lombok.extern.log4j.Log4j2;
 import my.photomanager.filter.IFilter;
 import my.photomanager.photo.Photo;
 
 @Builder(setterPrefix = "with")
 @EqualsAndHashCode
 @ToString
+@Log4j2
 public class LocationFilter implements IFilter {
 
     @NonNull
@@ -26,7 +32,28 @@ public class LocationFilter implements IFilter {
 
     @Override
     public boolean test(@NonNull Photo photo) {
-        return photo.getCountry().equals(country) && photo.getCity().equals(city);
+        Predicate<Photo> isCountryEmpty = filteredPhoto -> filteredPhoto.getCountry() == "";
+        Predicate<Photo> isCountrySet = isCountryEmpty.negate();
+
+        Predicate<Photo> isCityEmpty = filteredPhoto -> filteredPhoto.getCity() == "";
+        Predicate<Photo> isCitySet = isCityEmpty.negate();
+
+        Predicate<Photo> isCountryAndCitySet = isCountrySet.and(isCitySet);
+        Predicate<Photo> isCountrySetAndCityEmpty = isCountrySet.and(isCityEmpty);
+        Predicate<Photo> isCountryEmptyAndCitySet = isCountryEmpty.and(isCitySet);
+
+        if (isCountryAndCitySet.test(photo))
+            return photo.getCountry().equals(country) && photo.getCity().equals(city);
+
+        if (isCountrySetAndCityEmpty.test(photo))
+            return photo.getCountry().equals(country);
+
+        if (isCountryEmptyAndCitySet.test(photo))
+            return photo.getCity().equals(city);
+
+        log.warn("no match found for {}", kv("photo", photo));
+        return false;
+
     }
 
     @Override

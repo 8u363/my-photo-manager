@@ -21,8 +21,6 @@ import my.photomanager.photo.Photo;
 @Log4j2
 public class FilterService {
 
-    private Map<FilterCategory, Set<String>> filterOptions = Maps.newHashMap();
-
     private Map<FilterCategory, Set<? extends IFilter>> filterList = Maps.newHashMap();
 
     @SuppressWarnings("unchecked")
