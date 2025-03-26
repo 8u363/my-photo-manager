@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.time.LocalDate;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -15,7 +16,6 @@ class DefaultMetaDataFactoryTest {
 
     private final int PHOTO_HEIGHT = 768;
     private final int PHOTO_WIDTH = 1024;
-    private final String PHOTO_CREATION_TIME_STAMP = "2025:01:01 12:00:00";
 
     static Stream<File> getPhotoFilesWithExifData() {
         return Stream.of(
@@ -33,7 +33,7 @@ class DefaultMetaDataFactoryTest {
         assertThat(metaData).isNotNull();
         assertThat(metaData.height()).isEqualTo(PHOTO_HEIGHT);
         assertThat(metaData.width()).isEqualTo(PHOTO_WIDTH);
-        assertThat(metaData.creationTimeStamp()).isEqualTo(PHOTO_CREATION_TIME_STAMP);
+        assertThat(metaData.creationDate()).isEqualTo(LocalDate.of(2025, 1, 1));
         assertThat(metaData.longitude()).isEqualTo(13.376194444444446);
         assertThat(metaData.latitude()).isEqualTo(52.518680555555555);
     }
@@ -54,7 +54,7 @@ class DefaultMetaDataFactoryTest {
         assertThat(metaData).isNotNull();
         assertThat(metaData.height()).isEqualTo(PHOTO_HEIGHT);
         assertThat(metaData.width()).isEqualTo(PHOTO_WIDTH);
-        assertThat(metaData.creationTimeStamp()).isEmpty();
+        assertThat(metaData.creationDate()).isEqualTo(LocalDate.of(1900, 1, 1));
         assertThat(metaData.longitude()).isZero();
         assertThat(metaData.latitude()).isZero();
     }
@@ -67,7 +67,7 @@ class DefaultMetaDataFactoryTest {
         assertThat(metaData).isNotNull();
         assertThat(metaData.height()).isZero();
         assertThat(metaData.width()).isZero();
-        assertThat(metaData.creationTimeStamp()).isEmpty();
+        assertThat(metaData.creationDate()).isEqualTo(LocalDate.of(1900, 1, 1));
         assertThat(metaData.longitude()).isZero();
         assertThat(metaData.latitude()).isZero();
     }
