@@ -29,7 +29,7 @@ public class DefaultPhotoFactory implements IPhotoFactory {
 
                 var photo = Photo.builder(photoFile.getAbsolutePath(), getPhotoHashValue(photoFile))
                                 .withHeight(metaData.height()).withWidth(metaData.width())
-                                .withCreationTimeStamp(metaData.creationTimeStamp())
+                                .withCreationDate(metaData.creationDate())
                                 .withCountry(locationData.country()).withCity(locationData.city())
                                 .withPostalCode(locationData.postalCode())
                                 .withRoad(locationData.road()).build();
