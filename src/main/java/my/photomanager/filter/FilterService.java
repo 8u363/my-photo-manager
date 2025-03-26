@@ -4,17 +4,14 @@ import static net.logstash.logback.argument.StructuredArguments.kv;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import java.util.regex.MatchResult;
-import java.util.regex.Pattern;
-import org.apache.logging.log4j.util.Strings;
 import org.springframework.stereotype.Service;
 import com.google.common.collect.Maps;
 import lombok.NonNull;
 import lombok.extern.log4j.Log4j2;
+import my.photomanager.filter.creationDateFilter.CreationDateFilter;
 import my.photomanager.filter.locationFilter.LocationFilter;
 import my.photomanager.filter.orientationFilter.Orientation;
 import my.photomanager.filter.orientationFilter.OrientationFilter;
-import my.photomanager.filter.timeStampFilter.TimeStampFilter;
 import my.photomanager.photo.Photo;
 
 @Service
@@ -35,10 +32,10 @@ public class FilterService {
         log.info("{}", kv("location filters", locationFilters));
         filterList.put(FilterCategory.LOCATION, locationFilters);
 
-        HashSet<TimeStampFilter> timeStampFilters = new HashSet<>();
+        HashSet<CreationDateFilter> timeStampFilters = new HashSet<>();
         if (filterList.containsKey(FilterCategory.CREATION_YEAR)) {
             timeStampFilters =
-                    (HashSet<TimeStampFilter>) filterList.get(FilterCategory.CREATION_YEAR);
+                    (HashSet<CreationDateFilter>) filterList.get(FilterCategory.CREATION_YEAR);
         }
         timeStampFilters.add(createTimeStampFilter(photo));
         log.info("{}", kv("timestamp filters", timeStampFilters));
@@ -56,11 +53,9 @@ public class FilterService {
         return filterList;
     }
 
-    private TimeStampFilter createTimeStampFilter(@NonNull Photo photo) {
-        var creationYear = Pattern.compile("\\d{4}").matcher(photo.getCreationTimeStamp()).results()
-                .map(MatchResult::group).findAny().orElse(Strings.EMPTY);
-
-        return TimeStampFilter.builder().withYear(creationYear).build();
+    private CreationDateFilter createTimeStampFilter(@NonNull Photo photo) {
+        return CreationDateFilter.builder().withYear(photo.getCreationDate().getYear())
+                .withMonth(photo.getCreationDate().getMonthValue()).build();
     }
 
     private LocationFilter createLocationFilter(@NonNull Photo photo) {

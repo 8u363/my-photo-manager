@@ -30,10 +30,12 @@ public class LocationFilter implements IFilter {
 
     @Override
     public boolean test(@NonNull Photo photo) {
-        Predicate<Photo> isCountryEmpty = filteredPhoto -> filteredPhoto.getCountry() == "";
+        Predicate<Photo> isCountryEmpty =
+                filteredPhoto -> filteredPhoto.getCountry().equals(Strings.EMPTY);
         Predicate<Photo> isCountrySet = isCountryEmpty.negate();
 
-        Predicate<Photo> isCityEmpty = filteredPhoto -> filteredPhoto.getCity() == "";
+        Predicate<Photo> isCityEmpty =
+                filteredPhoto -> filteredPhoto.getCity().equals(Strings.EMPTY);
         Predicate<Photo> isCitySet = isCityEmpty.negate();
 
         Predicate<Photo> isCountryAndCitySet = isCountrySet.and(isCitySet);
