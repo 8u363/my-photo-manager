@@ -1,5 +1,6 @@
 package my.photomanager.photo;
 
+import java.time.LocalDate;
 import org.apache.logging.log4j.util.Strings;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -22,6 +23,7 @@ import lombok.ToString;
 @Table(name = "PHOTO")
 @ToString
 public class Photo {
+
 
     // required parameter
     @Id
@@ -50,10 +52,9 @@ public class Photo {
     @Builder.Default
     private final int height = 0;
 
-    @NonNull
     @Getter
     @Builder.Default
-    private final String creationTimeStamp = "";
+    private LocalDate creationDate = LocalDate.of(1900, 1, 1);
 
     // optional gps parameter
     @NonNull

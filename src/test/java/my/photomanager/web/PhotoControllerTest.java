@@ -16,6 +16,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import com.google.common.collect.Lists;
+import my.photomanager.filter.FilterService;
 import my.photomanager.photo.DefaultPhotoFactory;
 import my.photomanager.photo.Photo;
 import my.photomanager.service.PhotoService;
@@ -31,6 +32,9 @@ class PhotoControllerTest {
 
     @MockitoBean
     private DefaultPhotoFactory photoFactory;
+
+    @MockitoBean
+    private FilterService filterService;
 
     @Test
     void shouldAcceptGetRequestWithoutParameters() throws Exception {

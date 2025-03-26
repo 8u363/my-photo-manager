@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.time.LocalDate;
 import java.util.stream.Stream;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -13,7 +14,6 @@ class DefaultPhotoFactoryTest {
 
     private final int PHOTO_HEIGHT = 768;
     private final int PHOTO_WIDTH = 1024;
-    private final String PHOTO_CREATION_TIME_STAMP = "2025:01:01 12:00:00";
 
     private final DefaultPhotoFactory photoFactory = new DefaultPhotoFactory();
 
@@ -33,7 +33,7 @@ class DefaultPhotoFactoryTest {
         assertThat(photo).isNotNull();
         assertThat(photo.getHeight()).isEqualTo(PHOTO_HEIGHT);
         assertThat(photo.getWidth()).isEqualTo(PHOTO_WIDTH);
-        assertThat(photo.getCreationTimeStamp()).isEqualTo(PHOTO_CREATION_TIME_STAMP);
+        assertThat(photo.getCreationDate()).isEqualTo(LocalDate.of(2025, 1, 1));
         assertThat(photo.getCountry()).isEqualTo("Deutschland");
         assertThat(photo.getCity()).isEqualTo("Berlin");
         assertThat(photo.getPostalCode()).isEqualTo("10557");
@@ -56,7 +56,7 @@ class DefaultPhotoFactoryTest {
         assertThat(photo).isNotNull();
         assertThat(photo.getHeight()).isEqualTo(PHOTO_HEIGHT);
         assertThat(photo.getWidth()).isEqualTo(1024);
-        assertThat(photo.getCreationTimeStamp()).isEmpty();
+        assertThat(photo.getCreationDate()).isEqualTo(LocalDate.of(1900, 1, 1));
         assertThat(photo.getCountry()).isEmpty();
         assertThat(photo.getCity()).isEmpty();
         assertThat(photo.getPostalCode()).isEmpty();

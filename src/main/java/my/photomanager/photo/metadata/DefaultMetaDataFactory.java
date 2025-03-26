@@ -3,7 +3,9 @@ package my.photomanager.photo.metadata;
 import static net.logstash.logback.argument.StructuredArguments.kv;
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.Optional;
+import java.util.regex.Pattern;
 import org.apache.commons.imaging.ImageInfo;
 import org.apache.commons.imaging.Imaging;
 import org.apache.commons.imaging.formats.jpeg.JpegImageMetadata;
@@ -11,7 +13,6 @@ import org.apache.commons.imaging.formats.tiff.TiffImageMetadata;
 import org.apache.commons.imaging.formats.tiff.TiffImageMetadata.GpsInfo;
 import org.apache.commons.imaging.formats.tiff.constants.TiffTagConstants;
 import org.apache.commons.imaging.formats.webp.WebPImageMetadata;
-import org.apache.logging.log4j.util.Strings;
 import lombok.NonNull;
 import lombok.extern.log4j.Log4j2;
 
@@ -24,7 +25,7 @@ public class DefaultMetaDataFactory implements IMetaDataFactory {
 
         var photoHeight = getPhotoHeight(photoFile);
         var photoWidth = getPhotoWidth(photoFile);
-        var photoCreationTimeStamp = getPhotoCreationTimeStamp(photoFile);
+        var photoCreationTimeStamp = getPhotoCreationDate(photoFile);
         var photoGpsLongitude = getPhotoGpsLongitude(photoFile);
         var photoGpsLatitude = getPhotoGpsLatitude(photoFile);
         var metaData = new MetaData(photoWidth, photoHeight, photoCreationTimeStamp,
@@ -60,20 +61,29 @@ public class DefaultMetaDataFactory implements IMetaDataFactory {
         return photoWidth;
     }
 
-    private String getPhotoCreationTimeStamp(@NonNull File photoFile) throws IOException {
-        var photoCreationTimeStamp = Strings.EMPTY;
+    private LocalDate getPhotoCreationDate(@NonNull File photoFile) throws IOException {
+        var photoCreationDate = LocalDate.of(1900, 1, 1);
         var exifData = getExifDataIfExists(photoFile);
 
         if (exifData.isEmpty()) {
-            log.warn(
-                    "can not read photo creation time stamp because photo file contains no exif data");
+            log.warn("can not read photo creation date because photo file contains no exif data");
         } else {
-            photoCreationTimeStamp =
+            var creationTimeStampText =
                     exifData.get().findField(TiffTagConstants.TIFF_TAG_DATE_TIME).getStringValue();
+            log.info("{}", kv("creationTimeStampText", creationTimeStampText));
 
+            var matchResult =
+                    Pattern.compile("(\\d{4}):(\\d{2}):(\\d{2})").matcher(creationTimeStampText);
+
+            if (matchResult.find()) {
+                var year = Integer.parseInt(matchResult.group(1));
+                var month = Integer.parseInt(matchResult.group(2));
+                var day = Integer.parseInt(matchResult.group(3));
+                photoCreationDate = LocalDate.of(year, month, day);
+            }
         }
 
-        return photoCreationTimeStamp;
+        return photoCreationDate;
     }
 
     private double getPhotoGpsLongitude(@NonNull File photoFile) throws IOException {
