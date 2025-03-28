@@ -1,6 +1,7 @@
 package my.photomanager.photo.metadata;
 
 import static net.logstash.logback.argument.StructuredArguments.kv;
+
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDate;
@@ -13,13 +14,22 @@ import org.apache.commons.imaging.formats.tiff.TiffImageMetadata;
 import org.apache.commons.imaging.formats.tiff.TiffImageMetadata.GpsInfo;
 import org.apache.commons.imaging.formats.tiff.constants.TiffTagConstants;
 import org.apache.commons.imaging.formats.webp.WebPImageMetadata;
+import org.springframework.stereotype.Service;
 import lombok.NonNull;
+import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
 
+@Service
 @Log4j2
-public class DefaultMetaDataFactory implements IMetaDataFactory {
+public class MetaDataService {
 
-    @Override
+    /**
+     * create a MetaData object of the photo file
+     * 
+     * @param photoFile
+     * @return the created meta data object
+     * @throws IOException
+     */
     public MetaData createMetaData(File photoFile) throws IOException {
         log.debug("create meta data object of {}", kv("photo file", photoFile.getAbsolutePath()));
 
@@ -30,11 +40,18 @@ public class DefaultMetaDataFactory implements IMetaDataFactory {
         var photoGpsLatitude = getPhotoGpsLatitude(photoFile);
         var metaData = new MetaData(photoWidth, photoHeight, photoCreationTimeStamp,
                 photoGpsLongitude, photoGpsLatitude);
-        log.info("created {}", kv("metadata object", metaData));
 
+        log.info("created {}", kv("metadata object", metaData));
         return metaData;
     }
 
+    /**
+     * read the photo height of the image info object
+     * 
+     * @param photoFile
+     * @return the photo height
+     * @throws IOException
+     */
     private int getPhotoHeight(@NonNull File photoFile) throws IOException {
         var photoHeight = 0;
 
@@ -48,6 +65,13 @@ public class DefaultMetaDataFactory implements IMetaDataFactory {
         return photoHeight;
     }
 
+    /**
+     * read the photo width of the image info object
+     * 
+     * @param photoFile
+     * @return the photo width
+     * @throws IOException
+     */
     private int getPhotoWidth(@NonNull File photoFile) throws IOException {
         var photoWidth = 0;
 
@@ -61,6 +85,13 @@ public class DefaultMetaDataFactory implements IMetaDataFactory {
         return photoWidth;
     }
 
+    /**
+     * read the photo creation date of the exif data
+     * 
+     * @param photoFile
+     * @return the photo creation date
+     * @throws IOException
+     */
     private LocalDate getPhotoCreationDate(@NonNull File photoFile) throws IOException {
         var photoCreationDate = LocalDate.of(1900, 1, 1);
         var exifData = getExifDataIfExists(photoFile);
@@ -70,8 +101,6 @@ public class DefaultMetaDataFactory implements IMetaDataFactory {
         } else {
             var creationTimeStampText =
                     exifData.get().findField(TiffTagConstants.TIFF_TAG_DATE_TIME).getStringValue();
-            log.info("{}", kv("creationTimeStampText", creationTimeStampText));
-
             var matchResult =
                     Pattern.compile("(\\d{4}):(\\d{2}):(\\d{2})").matcher(creationTimeStampText);
 
@@ -86,6 +115,13 @@ public class DefaultMetaDataFactory implements IMetaDataFactory {
         return photoCreationDate;
     }
 
+    /**
+     * read the photo gps longitude of the exif data
+     * 
+     * @param photoFile
+     * @return the photo gps longitude
+     * @throws IOException
+     */
     private double getPhotoGpsLongitude(@NonNull File photoFile) throws IOException {
         var photoGpsLongitude = 0d;
         var exifData = getExifDataIfExists(photoFile);
@@ -100,7 +136,13 @@ public class DefaultMetaDataFactory implements IMetaDataFactory {
         return photoGpsLongitude;
     }
 
-
+    /**
+     * read the photo gps latitude of the exif data
+     * 
+     * @param photoFile
+     * @return the photo gps latitude
+     * @throws IOException
+     */
     private double getPhotoGpsLatitude(@NonNull File photoFile) throws IOException {
         var photoGpsLatitude = 0d;
         var exifData = getExifDataIfExists(photoFile);
@@ -115,6 +157,13 @@ public class DefaultMetaDataFactory implements IMetaDataFactory {
         return photoGpsLatitude;
     }
 
+    /**
+     * read the photo exif data
+     * 
+     * @param photoFile
+     * @return the photo exif data
+     * @throws IOException
+     */
     private Optional<TiffImageMetadata> getExifDataIfExists(@NonNull File photoFile)
             throws IOException {
         if (photoFile.getAbsolutePath().toLowerCase().endsWith("jpg")) {
@@ -128,29 +177,40 @@ public class DefaultMetaDataFactory implements IMetaDataFactory {
         return Optional.empty();
     }
 
+    /**
+     * read the exif data of a jpeg photo
+     * 
+     * @param photoFile
+     * @return exif data
+     * @throws IOException
+     */
+    @SneakyThrows(IllegalArgumentException.class)
     private Optional<TiffImageMetadata> getJpegExifDataIfExists(@NonNull File photoFile)
             throws IOException {
-        try {
-            JpegImageMetadata jpegImageMetadata =
-                    (JpegImageMetadata) Imaging.getMetadata(photoFile);
-            if (jpegImageMetadata != null) {
-                return Optional.ofNullable(jpegImageMetadata.getExif());
-            }
-        } catch (IllegalArgumentException ignoredException) {
+
+        JpegImageMetadata jpegImageMetadata = (JpegImageMetadata) Imaging.getMetadata(photoFile);
+        if (jpegImageMetadata != null) {
+            return Optional.ofNullable(jpegImageMetadata.getExif());
         }
 
         return Optional.empty();
     }
 
+    /**
+     * read the exif data of a wep photo
+     * 
+     * @param photoFile
+     * @return the exif data
+     * @throws IOException
+     */
+    @SneakyThrows(IllegalArgumentException.class)
     private Optional<TiffImageMetadata> getWepExifDataIfExists(@NonNull File photoFile)
             throws IOException {
-        try {
-            WebPImageMetadata imageMetaData = (WebPImageMetadata) Imaging.getMetadata(photoFile);
 
-            if (imageMetaData != null) {
-                return Optional.ofNullable(imageMetaData.getExif());
-            }
-        } catch (IllegalArgumentException ignoredException) {
+        WebPImageMetadata imageMetaData = (WebPImageMetadata) Imaging.getMetadata(photoFile);
+
+        if (imageMetaData != null) {
+            return Optional.ofNullable(imageMetaData.getExif());
         }
 
         return Optional.empty();

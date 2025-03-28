@@ -1,16 +1,19 @@
 package my.photomanager.filter;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static my.photomanager.TestUtils.*;
+
 import java.time.LocalDate;
+import java.time.Month;
 import java.util.Set;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import my.photomanager.filter.creationDateFilter.CreationDateFilter;
-import my.photomanager.filter.locationFilter.LocationFilter;
-import my.photomanager.filter.orientationFilter.Orientation;
-import my.photomanager.filter.orientationFilter.OrientationFilter;
+import my.photomanager.filter.creationdatefilter.CreationDateFilter;
+import my.photomanager.filter.locationfilter.LocationFilter;
+import my.photomanager.filter.orientationfilter.Orientation;
+import my.photomanager.filter.orientationfilter.OrientationFilter;
 import my.photomanager.photo.Photo;
 
 @ExtendWith(SpringExtension.class)
@@ -18,12 +21,11 @@ class FilterServiceTest {
 
         private FilterService filterService;
 
-        private final String PHOTO_HASH_VALUE = "1234567890";
-        private final String PHOTO_FILE_PATH = "testPhoto.jpg";
 
-        private Photo photo1 = Photo.builder(PHOTO_FILE_PATH, PHOTO_HASH_VALUE).withWidth(1024)
-                        .withHeight(768).withCreationDate(LocalDate.of(2025, 1, 1))
-                        .withCountry("COUNTRY1").build();
+
+        private Photo photo1 = Photo.builder(PHOTO_FILE_PATH, PHOTO_HASH_VALUE)
+                        .withWidth(PHOTO_WIDTH).withHeight(768)
+                        .withCreationDate(LocalDate.of(2025, 1, 1)).withCountry("COUNTRY1").build();
 
         private Photo photo2 = Photo.builder(PHOTO_FILE_PATH, PHOTO_HASH_VALUE).withWidth(768)
                         .withHeight(1024).withCreationDate(LocalDate.of(2025, 1, 1))
@@ -73,9 +75,9 @@ class FilterServiceTest {
                 assertThat(timeStampFilter).usingRecursiveFieldByFieldElementComparator()
                                 .containsExactlyInAnyOrder(
                                                 CreationDateFilter.builder().withYear(2025)
-                                                                .withMonth(1).build(),
+                                                                .withMonth(Month.JANUARY).build(),
                                                 CreationDateFilter.builder().withYear(2023)
-                                                                .withMonth(1).build());
+                                                                .withMonth(Month.JANUARY).build());
         }
 
         @Test

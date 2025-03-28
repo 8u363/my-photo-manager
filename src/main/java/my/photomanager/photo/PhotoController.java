@@ -1,4 +1,4 @@
-package my.photomanager.web;
+package my.photomanager.photo;
 
 import java.io.File;
 import java.io.IOException;
@@ -11,22 +11,17 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import lombok.NonNull;
 import my.photomanager.filter.FilterService;
-import my.photomanager.photo.DefaultPhotoFactory;
-import my.photomanager.photo.Photo;
-import my.photomanager.service.PhotoService;
 
 @RestController
 @RequestMapping
 public class PhotoController {
 
     private final PhotoService photoService;
-    private final DefaultPhotoFactory photoFactory;
     private final FilterService filterService;
 
     protected PhotoController(@NonNull PhotoService photoService,
-            @NonNull DefaultPhotoFactory photoFactory, @NonNull FilterService filterService) {
+            @NonNull FilterService filterService) {
         this.photoService = photoService;
-        this.photoFactory = photoFactory;
         this.filterService = filterService;
     }
 
@@ -40,7 +35,7 @@ public class PhotoController {
     public Photo savePhoto(
             @RequestParam(value = "filePath", required = true) @NonNull String filePath)
             throws IOException {
-        var photo = photoFactory.createPhoto(new File(filePath));
+        var photo = photoService.createPhoto(new File(filePath));
 
         var savedPhoto = photoService.savePhoto(photo);
         filterService.updateFilterOptions(savedPhoto);

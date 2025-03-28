@@ -5,12 +5,15 @@ import java.io.IOException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import org.apache.commons.io.IOUtils;
+import org.apache.logging.log4j.util.Strings;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.springframework.stereotype.Service;
 import lombok.extern.log4j.Log4j2;
 
+@Service
 @Log4j2
-public class DefaultLocationFactory implements ILocationFactory {
+public class LocationService {
 
     private static final String JSON_ADDRESS_KEY = "address";
     private static final String JSON_COUNTRY_KEY = "country";
@@ -18,7 +21,14 @@ public class DefaultLocationFactory implements ILocationFactory {
     private static final String JSON_POSTCODE_KEY = "postcode";
     private static final String JSON_ROAD_KEY = "road";
 
-    @Override
+    /**
+     * create a Location object <br>
+     * use open street map to get address details of longitude and latitude
+     * 
+     * @param longitude
+     * @param latitude
+     * @return the created location object
+     */
     public Location createLocation(double longitude, double latitude) {
         log.debug("create location object of {} and {}", kv("longitude", longitude),
                 kv("latitude", latitude));
@@ -26,7 +36,7 @@ public class DefaultLocationFactory implements ILocationFactory {
         var addressDetails = fetchOpenStreetMapAdressDetails(longitude, latitude);
         log.debug("{}", kv("open steet map adress details", addressDetails));
 
-        var location = new Location("", "", "", "");
+        var location = new Location(Strings.EMPTY, Strings.EMPTY, Strings.EMPTY, Strings.EMPTY);
 
         // check if addressDetails has address field
         if (addressDetails.has(JSON_ADDRESS_KEY)) {
@@ -43,13 +53,13 @@ public class DefaultLocationFactory implements ILocationFactory {
             log.warn("open steet map adress details of {} and {} contains no address field",
                     kv("longitude", longitude), kv("latitude", latitude));
         }
-        log.info("created {}", kv("location object", location));
 
+        log.info("created {}", kv("location object", location));
         return location;
     }
 
     /**
-     * use longitude latitude to fetch address deztails from open street map in case of an error
+     * use longitude latitude to fetch address details from open street map in case of an error
      * return an empty json object
      * 
      * @param longitude
@@ -66,7 +76,7 @@ public class DefaultLocationFactory implements ILocationFactory {
             addressDetails = new JSONObject(
                     IOUtils.toString(new URL(openStreetMapURL), StandardCharsets.UTF_8));
         } catch (JSONException | IOException e) {
-            log.info("an {} occurred during fetch address details from open street map",
+            log.warn("an {} occurred during fetch address details from open street map",
                     kv("exception", e.getMessage()));
         }
 

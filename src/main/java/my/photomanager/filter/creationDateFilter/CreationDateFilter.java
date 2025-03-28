@@ -1,6 +1,7 @@
-package my.photomanager.filter.creationDateFilter;
+package my.photomanager.filter.creationdatefilter;
 
 import static net.logstash.logback.argument.StructuredArguments.kv;
+import java.time.Month;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -16,25 +17,25 @@ public class CreationDateFilter implements IFilter {
 
     private int year;
 
-    private int month;
+    private Month month;
 
     @Builder.Default
     private boolean active = false;
 
     @Override
     public boolean test(Photo photo) {
-        if (year > 0 && month > 0) {
+        if (year > 0 && month != null) {
             return photo.getCreationDate().getYear() == year
-                    && photo.getCreationDate().getMonthValue() == month;
+                    && photo.getCreationDate().getMonth() == month;
         }
 
-        if (year > 0 && month == 0) {
+        if (year > 0 && month == null) {
             return photo.getCreationDate().getYear() == year;
         }
 
 
-        if (year == 0 && month > 0) {
-            return photo.getCreationDate().getMonthValue() == month;
+        if (year == 0 && month != null) {
+            return photo.getCreationDate().getMonth() == month;
         }
 
         log.warn("no match found for {}", kv("photo", photo));
@@ -52,7 +53,7 @@ public class CreationDateFilter implements IFilter {
     }
 
     @Override
-    public void setInActive() {
+    public void setInactive() {
         active = false;
     }
 }

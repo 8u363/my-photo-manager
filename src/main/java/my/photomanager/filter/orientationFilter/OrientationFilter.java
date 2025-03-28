@@ -1,4 +1,4 @@
-package my.photomanager.filter.orientationFilter;
+package my.photomanager.filter.orientationfilter;
 
 import java.util.function.Predicate;
 import lombok.Builder;
@@ -48,7 +48,7 @@ public class OrientationFilter implements IFilter {
     }
 
     @Override
-    public void setInActive() {
+    public void setInactive() {
         active = false;
     }
 }

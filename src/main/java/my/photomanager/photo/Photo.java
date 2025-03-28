@@ -24,7 +24,6 @@ import lombok.ToString;
 @ToString
 public class Photo {
 
-
     // required parameter
     @Id
     @GeneratedValue
@@ -61,25 +60,25 @@ public class Photo {
     @Getter
     @Setter
     @Builder.Default
-    private String country = "";
+    private String country = Strings.EMPTY;
 
     @NonNull
     @Getter
     @Setter
     @Builder.Default
-    private String city = "";
+    private String city = Strings.EMPTY;
 
     @NonNull
     @Getter
     @Setter
     @Builder.Default
-    private String postalCode = "";
+    private String postalCode = Strings.EMPTY;
 
     @NonNull
     @Getter
     @Setter
     @Builder.Default
-    private String road = "";
+    private String road = Strings.EMPTY;
 
     public static PhotoBuilder builder(@NonNull String filePath, @NonNull String hashValue) {
         return new Photo.PhotoBuilder().withFilePath(filePath).withHashValue(hashValue);

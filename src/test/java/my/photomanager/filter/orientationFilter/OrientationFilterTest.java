@@ -6,6 +6,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import my.photomanager.filter.orientationfilter.Orientation;
+import my.photomanager.filter.orientationfilter.OrientationFilter;
 import my.photomanager.photo.Photo;
 
 class OrientationFilterTest {
@@ -26,7 +28,7 @@ class OrientationFilterTest {
                                 .withOrientation(Orientation.LANDSCAPE).build();
 
                 assertThat(orienationFilter.isActive()).isFalse();
-                orienationFilter.setInActive();
+                orienationFilter.setInactive();
                 assertThat(orienationFilter.isActive()).isFalse();
         }
 
