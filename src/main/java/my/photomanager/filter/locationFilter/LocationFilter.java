@@ -1,4 +1,4 @@
-package my.photomanager.filter.locationFilter;
+package my.photomanager.filter.locationfilter;
 
 import static net.logstash.logback.argument.StructuredArguments.kv;
 import java.util.function.Predicate;
@@ -67,7 +67,7 @@ public class LocationFilter implements IFilter {
     }
 
     @Override
-    public void setInActive() {
+    public void setInactive() {
         active = false;
     }
 }

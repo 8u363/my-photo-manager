@@ -1,4 +1,4 @@
-package my.photomanager.web;
+package my.photomanager.photo;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -17,9 +17,6 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import com.google.common.collect.Lists;
 import my.photomanager.filter.FilterService;
-import my.photomanager.photo.DefaultPhotoFactory;
-import my.photomanager.photo.Photo;
-import my.photomanager.service.PhotoService;
 
 @WebMvcTest(PhotoController.class)
 class PhotoControllerTest {
@@ -29,9 +26,6 @@ class PhotoControllerTest {
 
     @MockitoBean
     private PhotoService photoService;
-
-    @MockitoBean
-    private DefaultPhotoFactory photoFactory;
 
     @MockitoBean
     private FilterService filterService;
@@ -66,5 +60,4 @@ class PhotoControllerTest {
         mockMvc.perform(delete("/delete?id=1").content("application/json"))
                 .andExpect(status().isOk());
     }
-
 }

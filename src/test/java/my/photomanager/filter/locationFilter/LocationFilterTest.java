@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import my.photomanager.filter.locationfilter.LocationFilter;
 import my.photomanager.photo.Photo;
 
 class LocationFilterTest {
@@ -24,7 +25,7 @@ class LocationFilterTest {
                 var locationFilter = LocationFilter.builder().build();
 
                 assertThat(locationFilter.isActive()).isFalse();
-                locationFilter.setInActive();
+                locationFilter.setInactive();
                 assertThat(locationFilter.isActive()).isFalse();
         }
 

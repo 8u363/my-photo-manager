@@ -10,7 +10,7 @@ public interface IFilter extends Predicate<Photo> {
 
     void setActive();
 
-    void setInActive();
+    void setInactive();
 
     boolean test(@NonNull Photo photo);
 }

@@ -8,10 +8,10 @@ import org.springframework.stereotype.Service;
 import com.google.common.collect.Maps;
 import lombok.NonNull;
 import lombok.extern.log4j.Log4j2;
-import my.photomanager.filter.creationDateFilter.CreationDateFilter;
-import my.photomanager.filter.locationFilter.LocationFilter;
-import my.photomanager.filter.orientationFilter.Orientation;
-import my.photomanager.filter.orientationFilter.OrientationFilter;
+import my.photomanager.filter.creationdatefilter.CreationDateFilter;
+import my.photomanager.filter.locationfilter.LocationFilter;
+import my.photomanager.filter.orientationfilter.Orientation;
+import my.photomanager.filter.orientationfilter.OrientationFilter;
 import my.photomanager.photo.Photo;
 
 @Service
@@ -20,6 +20,12 @@ public class FilterService {
 
     private Map<FilterCategory, Set<? extends IFilter>> filterList = Maps.newHashMap();
 
+    /**
+     * update the filter options
+     * 
+     * @param photo
+     * @return
+     */
     @SuppressWarnings("unchecked")
     public Map<FilterCategory, Set<? extends IFilter>> updateFilterOptions(@NonNull Photo photo) {
         log.info("update filter options");
@@ -53,17 +59,48 @@ public class FilterService {
         return filterList;
     }
 
+    /**
+     * create the time stamp filter off photo file
+     * 
+     * @param photo
+     * @return the created date time filter
+     */
     private CreationDateFilter createTimeStampFilter(@NonNull Photo photo) {
-        return CreationDateFilter.builder().withYear(photo.getCreationDate().getYear())
-                .withMonth(photo.getCreationDate().getMonthValue()).build();
+        log.debug("create creation date filter of {}", kv("photo", photo));
+
+        var creationDateFilter =
+                CreationDateFilter.builder().withYear(photo.getCreationDate().getYear())
+                        .withMonth(photo.getCreationDate().getMonth()).build();
+
+        log.info("created {}", kv("creation date filter", creationDateFilter));
+        return creationDateFilter;
     }
 
+    /**
+     * create location filter of photo file
+     * 
+     * @param photo
+     * @return the created location fiter
+     */
     private LocationFilter createLocationFilter(@NonNull Photo photo) {
-        return LocationFilter.builder().withCountry(photo.getCountry()).withCity(photo.getCity())
-                .build();
+        log.debug("create location filter of {}", kv("photo", photo));
+
+        var locationFilter = LocationFilter.builder().withCountry(photo.getCountry())
+                .withCity(photo.getCity()).build();
+
+        log.info("created {}", kv("location filter", locationFilter));
+        return locationFilter;
     }
 
+    /**
+     * crete orientation filter of photo filter
+     * 
+     * @param photo
+     * @return the created orientation filter
+     */
     private OrientationFilter createOrientationFilter(@NonNull Photo photo) {
+        log.debug("create orientation filter of {}", kv("photo", photo));
+
         var orientation = Orientation.LANDSCAPE;
 
         if (photo.getHeight() < photo.getWidth())
@@ -73,7 +110,9 @@ public class FilterService {
             orientation = Orientation.SQUARE;
         }
 
-        return OrientationFilter.builder().withOrientation(orientation).build();
+        var orientationFilter = OrientationFilter.builder().withOrientation(orientation).build();
 
+        log.info("created {}", kv("orientation filter", orientationFilter));
+        return orientationFilter;
     }
 }
