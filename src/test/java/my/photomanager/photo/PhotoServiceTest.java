@@ -45,7 +45,7 @@ class PhotoServiceTest {
     void shouldSavePhotoIfNotExists() {
         when(repository.findByHashValue(PHOTO_HASH_VALUE)).thenReturn(Optional.empty());
 
-        var photo = buildPhoto();
+        var photo = buildDefaultPhoto();
         photoService.savePhoto(photo);
         verify(repository).saveAndFlush(photo);
     }
@@ -55,8 +55,7 @@ class PhotoServiceTest {
         when(repository.findByHashValue(PHOTO_HASH_VALUE))
                 .thenReturn(Optional.of(mock(Photo.class)));
 
-        var photo = buildPhoto();
-        photoService.savePhoto(photo);
+        photoService.savePhoto(buildDefaultPhoto());
         verify(repository, never()).saveAndFlush(any(Photo.class));
     }
 
