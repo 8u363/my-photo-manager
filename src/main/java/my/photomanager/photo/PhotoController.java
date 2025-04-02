@@ -26,8 +26,9 @@ public class PhotoController {
     }
 
     @GetMapping(value = "/photos")
-    public List<PhotoDTO> getPhotos(@RequestParam(required = false, defaultValue = "0") int page,
-            @RequestParam(required = false, defaultValue = "25") int size) {
+    public List<PhotoDTO> getPhotos(
+            @RequestParam(name = "page", required = false, defaultValue = "0") int page,
+            @RequestParam(name = "size", required = false, defaultValue = "100") int size) {
         return photoService.getPhotos(page, size);
     }
 
