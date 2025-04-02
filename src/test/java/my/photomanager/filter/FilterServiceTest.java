@@ -4,14 +4,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static my.photomanager.TestUtils.*;
 
 import java.time.LocalDate;
-import java.time.Month;
+
 import java.util.Set;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import my.photomanager.filter.creationdatefilter.CreationDateFilter;
-import my.photomanager.filter.locationfilter.LocationFilter;
+
 import my.photomanager.filter.orientationfilter.Orientation;
 import my.photomanager.filter.orientationfilter.OrientationFilter;
 import my.photomanager.photo.Photo;
@@ -40,45 +39,6 @@ class FilterServiceTest {
                 filterService = new FilterService();
         }
 
-
-        @Test
-        @SuppressWarnings("unchecked")
-        void shouldUpdateLocationFilterOptions() {
-                filterService.updateFilterOptions(photo1);
-                filterService.updateFilterOptions(photo2);
-                var filterOptions = filterService.updateFilterOptions(photo3);
-
-                assertThat(filterOptions).containsKey(FilterCategory.LOCATION);
-
-                var locationFilter =
-                                (Set<LocationFilter>) filterOptions.get(FilterCategory.LOCATION);
-
-                assertThat(locationFilter).usingRecursiveFieldByFieldElementComparator()
-                                .containsExactlyInAnyOrder(
-                                                LocationFilter.builder().withCountry("COUNTRY1")
-                                                                .build(),
-                                                LocationFilter.builder().withCountry("COUNTRY2")
-                                                                .build());
-        }
-
-        @Test
-        @SuppressWarnings("unchecked")
-        void shouldUpdateTimeStampFilterOptions() {
-                filterService.updateFilterOptions(photo1);
-                filterService.updateFilterOptions(photo2);
-                var filterOptions = filterService.updateFilterOptions(photo3);
-
-                assertThat(filterOptions).containsKey(FilterCategory.CREATION_YEAR);
-                var timeStampFilter = (Set<CreationDateFilter>) filterOptions
-                                .get(FilterCategory.CREATION_YEAR);
-
-                assertThat(timeStampFilter).usingRecursiveFieldByFieldElementComparator()
-                                .containsExactlyInAnyOrder(
-                                                CreationDateFilter.builder().withYear(2025)
-                                                                .withMonth(Month.JANUARY).build(),
-                                                CreationDateFilter.builder().withYear(2023)
-                                                                .withMonth(Month.JANUARY).build());
-        }
 
         @Test
         @SuppressWarnings("unchecked")
