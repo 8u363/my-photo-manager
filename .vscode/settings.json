@@ -17,7 +17,7 @@
   "editor.mouseWheelZoom": true,
   "editor.smoothScrolling": true,
   "editor.tabSize": 4,
-  "workbench.colorTheme": "Solarized Dark",
+  "workbench.colorTheme": "Solarized Light",
   "workbench.startupEditor": "none",
   "terminal.integrated.fontSize": 14,
   "terminal.integrated.cursorBlinking": true,
