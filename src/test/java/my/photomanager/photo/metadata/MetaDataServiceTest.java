@@ -31,8 +31,8 @@ class MetaDataServiceTest {
         var metaData = metaDataService.createMetaData(photoFile);
 
         assertThat(metaData).isNotNull();
-        assertThat(metaData.height()).isEqualTo(PHOTO_HEIGHT);
-        assertThat(metaData.width()).isEqualTo(PHOTO_WIDTH);
+        assertThat(metaData.height()).isEqualTo(PHOTO_HEIGHT_768);
+        assertThat(metaData.width()).isEqualTo(PHOTO_WIDTH_1024);
         assertThat(metaData.creationDate()).isEqualTo(LocalDate.of(2025, Month.JANUARY, 1));
         assertThat(metaData.longitude()).isEqualTo(13.376194444444446);
         assertThat(metaData.latitude()).isEqualTo(52.518680555555555);
@@ -52,8 +52,8 @@ class MetaDataServiceTest {
         var metaData = metaDataService.createMetaData(photoFile);
 
         assertThat(metaData).isNotNull();
-        assertThat(metaData.height()).isEqualTo(PHOTO_HEIGHT);
-        assertThat(metaData.width()).isEqualTo(PHOTO_WIDTH);
+        assertThat(metaData.height()).isEqualTo(PHOTO_HEIGHT_768);
+        assertThat(metaData.width()).isEqualTo(PHOTO_WIDTH_1024);
         assertThat(metaData.creationDate()).isEqualTo(LocalDate.of(1900, Month.JANUARY, 1));
         assertThat(metaData.longitude()).isZero();
         assertThat(metaData.latitude()).isZero();
