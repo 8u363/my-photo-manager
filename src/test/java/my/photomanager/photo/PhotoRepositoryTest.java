@@ -3,95 +3,30 @@ package my.photomanager.photo;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrowsExactly;
 import static my.photomanager.TestUtils.*;
-
+import java.time.LocalDate;
 import java.time.Month;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Stream;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+
+import lombok.extern.log4j.Log4j2;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.dao.DataIntegrityViolationException;
+import com.google.common.collect.Lists;
 import my.photomanager.TestUtils;
 
 @DataJpaTest
+@Log4j2
 class PhotoRepositoryTest {
 
         @Autowired
         private PhotoRepository repository;
-
-        // test photos without location and date
-        static Photo testPhotoOfApril2025 = TestUtils.buildPhoto(UUID.randomUUID().toString(),
-                        PHOTO_CREATION_DATE_APRIL_2025);
-        static Photo testPhotoOfDecember2025 = TestUtils.buildPhoto(UUID.randomUUID().toString(),
-                        PHOTO_CREATION_DATE_DECEMBER_2025);
-        static Photo testPhotoOfDecember2024 = TestUtils.buildPhoto(UUID.randomUUID().toString(),
-                        PHOTO_CREATION_DATE_DECEMBER_2024);
-
-        // test photos with location without date
-        static Photo testPhotoOfBerlinInGermany = TestUtils.buildPhoto(UUID.randomUUID().toString(),
-                        PHOTO_COUNTRY_GERMANY, PHOTO_CITY_BERLIN);
-        static Photo testPhotoOfHamburgInGermany = TestUtils.buildPhoto(
-                        UUID.randomUUID().toString(), PHOTO_COUNTRY_GERMANY, PHOTO_CITY_HAMBURG);
-        static Photo testPhotoOfParisInFrance = TestUtils.buildPhoto(UUID.randomUUID().toString(),
-                        PHOTO_COUNTRY_FRANCE, PHOTO_CITY_PARIS);
-
-        // test photos with location and date
-        static Photo testPhotoOfBerlinInGermanyOfApril2025 = TestUtils.buildPhoto(
-                        UUID.randomUUID().toString(), PHOTO_CREATION_DATE_APRIL_2025,
-                        PHOTO_COUNTRY_GERMANY, PHOTO_CITY_BERLIN);
-        static Photo testPhotoOfHamburgInGermanyOfDecember2025 = TestUtils.buildPhoto(
-                        UUID.randomUUID().toString(), PHOTO_CREATION_DATE_DECEMBER_2025,
-                        PHOTO_COUNTRY_GERMANY, PHOTO_CITY_HAMBURG);
-        static Photo testPhotoOfParisInFranceOfDecember2024 = TestUtils.buildPhoto(
-                        UUID.randomUUID().toString(), PHOTO_CREATION_DATE_DECEMBER_2024,
-                        PHOTO_COUNTRY_FRANCE, PHOTO_CITY_PARIS);
-
-        @BeforeEach
-        void setup() {
-                // test photos without location and date
-                repository.saveAndFlush(TestUtils.buildPhoto(testPhotoOfApril2025.getHashValue(),
-                                PHOTO_CREATION_DATE_APRIL_2025));
-                repository.saveAndFlush(TestUtils.buildPhoto(testPhotoOfDecember2025.getHashValue(),
-                                PHOTO_CREATION_DATE_DECEMBER_2025));
-                repository.saveAndFlush(TestUtils.buildPhoto(testPhotoOfDecember2024.getHashValue(),
-                                PHOTO_CREATION_DATE_DECEMBER_2024));
-
-                // test photos with location without date
-                repository.saveAndFlush(
-                                TestUtils.buildPhoto(testPhotoOfBerlinInGermany.getHashValue(),
-                                                PHOTO_COUNTRY_GERMANY, PHOTO_CITY_BERLIN));
-                repository.saveAndFlush(
-                                TestUtils.buildPhoto(testPhotoOfHamburgInGermany.getHashValue(),
-                                                PHOTO_COUNTRY_GERMANY, PHOTO_CITY_HAMBURG));
-                repository.saveAndFlush(
-                                TestUtils.buildPhoto(testPhotoOfParisInFrance.getHashValue(),
-                                                PHOTO_COUNTRY_FRANCE, PHOTO_CITY_PARIS));
-
-                // test photos with location and date
-                repository.saveAndFlush(TestUtils.buildPhoto(
-                                testPhotoOfBerlinInGermanyOfApril2025.getHashValue(),
-                                PHOTO_CREATION_DATE_APRIL_2025, PHOTO_COUNTRY_GERMANY,
-                                PHOTO_CITY_BERLIN));
-                repository.saveAndFlush(TestUtils.buildPhoto(
-                                testPhotoOfHamburgInGermanyOfDecember2025.getHashValue(),
-                                PHOTO_CREATION_DATE_DECEMBER_2025, PHOTO_COUNTRY_GERMANY,
-                                PHOTO_CITY_HAMBURG));
-                repository.saveAndFlush(TestUtils.buildPhoto(
-                                testPhotoOfParisInFranceOfDecember2024.getHashValue(),
-                                PHOTO_CREATION_DATE_DECEMBER_2024, PHOTO_COUNTRY_FRANCE,
-                                PHOTO_CITY_PARIS));
-        }
-
-        @AfterEach
-        void cleanUp() {
-                repository.deleteAll();
-        }
 
         @Test
         void shouldThrowExceptionWhenConstraintsCheckFailed() {
@@ -101,58 +36,117 @@ class PhotoRepositoryTest {
                                 () -> repository.saveAndFlush(TestUtils.buildDefaultPhoto()));
         }
 
+        @Nested
+        class FilterTests {
+                // Test paramater
+                int PHOTO_HEIGHT_1024 = 1024;
+                static int PHOTO_HEIGHT_768 = 768;
+
+                static int PHOTO_WIDTH_1024 = 1024;
+                static int PHOTO_WIDTH_768 = 768;
+
+                static String COUNTRY_A = "COUNTRY_A";
+                static String COUNTRY_B = "COUNTRY_B";
+
+                static String CITY_A = "CITY_A";
+                static String CITY_B = "CITY_B";
+
+                static Month CREATION_MONTH_JULY = Month.JULY;
+                static Month CREATION_MONTH_DECEMBER = Month.DECEMBER;
+
+                static int CREATION_YEAR_2023 = 2023;
+                static int CREATION_YEAR_2024 = 2024;
+
+                static LocalDate PHOTO_CREATION_DATE_JULY_2023 =
+                                LocalDate.of(CREATION_YEAR_2023, CREATION_MONTH_JULY, 1);
+                static LocalDate PHOTO_CREATION_DATE_DECEMBER_2023 =
+                                LocalDate.of(CREATION_YEAR_2023, CREATION_MONTH_DECEMBER, 1);
+                static LocalDate PHOTO_CREATION_DATE_JULY_2024 =
+                                LocalDate.of(CREATION_YEAR_2024, CREATION_MONTH_JULY, 1);
+                static LocalDate PHOTO_CREATION_DATE_DECEMBER_2024 =
+                                LocalDate.of(CREATION_YEAR_2024, CREATION_MONTH_DECEMBER, 1);
+
+                // Test photos
+                static Photo PHOTO_1;
+                static Photo PHOTO_2;
+                static Photo PHOTO_3;
+                static Photo PHOTO_4;
+                static Photo PHOTO_5;
+
+                @BeforeEach
+                void setup() {
+                        // July 2023, 1024x768, countryA, cityA
+                        PHOTO_1 = buildPhoto(UUID.randomUUID().toString(),
+                                        PHOTO_CREATION_DATE_JULY_2023, PHOTO_HEIGHT_1024,
+                                        PHOTO_WIDTH_768, COUNTRY_A, CITY_A);
+
+                        // DECEMBER 2023, 768x1024, countryA, cityA
+                        PHOTO_2 = buildPhoto(UUID.randomUUID().toString(),
+                                        PHOTO_CREATION_DATE_DECEMBER_2023, PHOTO_HEIGHT_768,
+                                        PHOTO_WIDTH_1024, COUNTRY_A, CITY_A);
+
+                        // July 2023, 1024x768, countryB, cityA
+                        PHOTO_3 = buildPhoto(UUID.randomUUID().toString(),
+                                        PHOTO_CREATION_DATE_JULY_2023, PHOTO_HEIGHT_1024,
+                                        PHOTO_WIDTH_768, COUNTRY_B, CITY_A);
+
+                        // DECEMBER 2023, 768x1024, countryA, cityB
+                        PHOTO_4 = buildPhoto(UUID.randomUUID().toString(),
+                                        PHOTO_CREATION_DATE_DECEMBER_2023, PHOTO_HEIGHT_768,
+                                        PHOTO_WIDTH_1024, COUNTRY_A, CITY_B);
+
+                        // July 2024, 768x768, countryB, cityA
+                        PHOTO_5 = buildPhoto(UUID.randomUUID().toString(),
+                                        PHOTO_CREATION_DATE_JULY_2024, PHOTO_HEIGHT_768,
+                                        PHOTO_WIDTH_768, COUNTRY_B, CITY_A);
 
 
-        private static Stream<Arguments> getFilterParameter() {
-                return Stream.of(
-                                // all photos of 2025
-                                Arguments.of(null, null, 2025, null, List.of(testPhotoOfApril2025,
-                                                testPhotoOfDecember2025,
-                                                testPhotoOfBerlinInGermanyOfApril2025,
-                                                testPhotoOfHamburgInGermanyOfDecember2025)),
+                        repository.deleteAll();
+                        repository.saveAllAndFlush(Arrays.asList(PHOTO_1, PHOTO_2, PHOTO_3, PHOTO_3,
+                                        PHOTO_4, PHOTO_5));
+                }
 
-                                // all photos of december
-                                Arguments.of(null, null, null, Month.DECEMBER, List.of(
-                                                testPhotoOfDecember2025, testPhotoOfDecember2024,
-                                                testPhotoOfHamburgInGermanyOfDecember2025,
-                                                testPhotoOfParisInFranceOfDecember2024)),
+                static Stream<Arguments> getFilterParameter() {
+                        return Stream.of(
+                                        Arguments.of(CREATION_YEAR_2023, null, null, null, null,
+                                                        Lists.newArrayList(PHOTO_1, PHOTO_2,
+                                                                        PHOTO_3, PHOTO_4)),
 
-                                // all photos of december 2024
-                                Arguments.of(null, null, 2024, Month.DECEMBER, List.of(
-                                                testPhotoOfDecember2024,
-                                                testPhotoOfParisInFranceOfDecember2024)),
+                                        Arguments.of(CREATION_YEAR_2023, Month.JULY, null, null,
+                                                        null, Lists.newArrayList(PHOTO_1, PHOTO_3)),
 
-                                // all photos of germany
-                                Arguments.of(PHOTO_COUNTRY_GERMANY, null, null, null, List.of(
-                                                testPhotoOfBerlinInGermany,
-                                                testPhotoOfHamburgInGermany,
-                                                testPhotoOfBerlinInGermanyOfApril2025,
-                                                testPhotoOfHamburgInGermanyOfDecember2025)),
+                                        Arguments.of(CREATION_YEAR_2023, Month.DECEMBER, null,
+                                                        COUNTRY_A, null,
+                                                        Lists.newArrayList(PHOTO_2, PHOTO_4)),
 
-                                // all photos of germany berlin
-                                Arguments.of(PHOTO_COUNTRY_GERMANY, PHOTO_CITY_BERLIN, null, null,
-                                                List.of(testPhotoOfBerlinInGermany,
-                                                                testPhotoOfBerlinInGermanyOfApril2025)),
+                                        Arguments.of(CREATION_YEAR_2023, Month.DECEMBER, null,
+                                                        COUNTRY_A, CITY_B,
+                                                        Lists.newArrayList(PHOTO_4)),
 
-                                // all photos of germany of 2025
-                                Arguments.of(PHOTO_COUNTRY_GERMANY, null, 2025, null, List.of(
-                                                testPhotoOfBerlinInGermanyOfApril2025,
-                                                testPhotoOfHamburgInGermanyOfDecember2025)),
+                                        Arguments.of(null, null, Orientation.LANDSCAPE, null, null,
+                                                        Lists.newArrayList(PHOTO_1, PHOTO_3)),
 
-                                // all photos of germany in december 2025
-                                Arguments.of(PHOTO_COUNTRY_GERMANY, null, 2025, Month.DECEMBER, List
-                                                .of(testPhotoOfHamburgInGermanyOfDecember2025)));
-        }
+                                        Arguments.of(null, null, Orientation.SQUARE, null, null,
+                                                        Lists.newArrayList(PHOTO_5)));
+                }
 
-        @ParameterizedTest
-        @MethodSource("getFilterParameter")
-        void shouldFindPhotosByParameters(String country, String city, Integer year, Month month,
-                        List<Photo> filteredPhotos) {
-                var spec = PhotoReposiorySpecification.findBy(country, city, year, month);
-                var filterResult = repository.findAll(spec);
+                @ParameterizedTest
+                @MethodSource("getFilterParameter")
+                void shouldFindPhotos(Integer creationYear, Month creationMonth,
+                                Orientation orientation, String country, String city,
+                                List<Photo> expectedPhotos) {
 
-                assertThat(filteredPhotos).hasSameSizeAs(filterResult);
-                filteredPhotos.stream().forEach(
-                                expectedPhoto -> assertThat(filterResult.contains(expectedPhoto)));
+
+
+                        var spec = PhotoRepositorySpecification.findBy(country, city, creationYear,
+                                        creationMonth, orientation);
+
+                        var filteredPhotos = repository.findAll(spec);
+
+                        assertThat(filteredPhotos).hasSameSizeAs(expectedPhotos);
+                        filteredPhotos.stream().forEach(expectedPhoto -> assertThat(
+                                        filteredPhotos.contains(expectedPhoto)));
+                }
+
         }
 }
