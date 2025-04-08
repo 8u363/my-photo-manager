@@ -93,8 +93,8 @@ jacocoTestCoverageVerification {
 				excludes = [
 					"my.photomanager.MyPhotoManager",
 					"my.photomanager.PhotoManagerException",
-					"my.photomanager.configuration.PhotoManagerConfiguration",
-					"my.photomanager.web.PhotoDTO"
+					"my.photomanager.config.Config",
+					"my.photomanager.photo.PhotoDTO"
 					]
 			}
 			limit {
@@ -104,8 +104,8 @@ jacocoTestCoverageVerification {
 				excludes = [
 					"my.photomanager.MyPhotoManager",
 					"my.photomanager.PhotoManagerException",
-					"my.photomanager.configuration.PhotoManagerConfiguration",
-					"my.photomanager.web.PhotoDTO"
+					"my.photomanager.config.Config",
+					"my.photomanager.photo.PhotoDTO"
 					]
 			}
 		}
