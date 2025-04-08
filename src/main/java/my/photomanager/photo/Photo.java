@@ -23,7 +23,6 @@ import lombok.ToString;
 @Entity
 @Table(name = "PHOTO")
 @ToString
-@EqualsAndHashCode(exclude = {"id"})
 public class Photo {
 
     // required parameter
