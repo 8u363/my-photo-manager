@@ -1,0 +1,4 @@
+photomanager:
+  thumbnail:
+    folder: thumbnails
+    width: 150
