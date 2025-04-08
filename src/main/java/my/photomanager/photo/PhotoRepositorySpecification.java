@@ -34,7 +34,7 @@ public class PhotoReposiorySpecification {
                 Expression<Integer> creationDateMonth =
                         criteriaBuilder.function("MONTH", Integer.class, root.get("creationDate"));
 
-                predicates.add(criteriaBuilder.equal(creationDateMonth, month));
+                predicates.add(criteriaBuilder.equal(creationDateMonth, month.getValue()));
             }
 
             return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
