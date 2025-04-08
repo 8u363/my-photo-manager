@@ -2,8 +2,6 @@ package my.photomanager;
 
 import java.time.LocalDate;
 import java.time.Month;
-import java.util.ArrayList;
-import java.util.UUID;
 import my.photomanager.photo.Photo;
 
 public class TestUtils {
