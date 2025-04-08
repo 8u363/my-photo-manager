@@ -17,12 +17,9 @@ import my.photomanager.filter.FilterService;
 public class PhotoController {
 
     private final PhotoService photoService;
-    private final FilterService filterService;
 
-    protected PhotoController(@NonNull PhotoService photoService,
-            @NonNull FilterService filterService) {
+    protected PhotoController(@NonNull PhotoService photoService) {
         this.photoService = photoService;
-        this.filterService = filterService;
     }
 
     @GetMapping(value = "/photos")
@@ -38,9 +35,7 @@ public class PhotoController {
             throws IOException {
         var photo = photoService.createPhoto(new File(filePath));
 
-        var savedPhoto = photoService.savePhoto(photo);
-        filterService.updateFilterOptions(savedPhoto);
-        return savedPhoto;
+        return photoService.savePhoto(photo);
     }
 
     @DeleteMapping("/delete")
